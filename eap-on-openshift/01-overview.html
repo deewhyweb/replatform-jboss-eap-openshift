@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Setup :: Template Tutorial</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/eap-on-openshift/01-overview.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="pre-reqs.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://redhat-scholars.github.io/course-template">Template Tutorial</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="eap-on-openshift" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-overview.html">Overview of JBoss EAP on OpenShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#benefits">Benefits of running JBoss EAP on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#cloud-native">Cloud native development</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#modernization">Modernization</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#build-deploy">Building and deployment options</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#clustering">Clustering</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#autoscaling">Auto-scaling</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#graceful-shutdown">Graceful shutdown</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#https">HTTPS configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#platform-options">Platform options</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="pre-reqs.html">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-mta.html">Migration Toolkit for Applications</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-mta.html#installation">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-mta.html#cloud-readiness">Perform cloud readiness check</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-mta.html#the-report">Understanding the report</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-intro-to-EAP-xp.html">Introduction to JBoss EAP XP</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-intro-to-EAP-xp.html#microprofile">Microprofile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-intro-to-EAP-xp.html#bootable-jar">Bootable JAR</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-intro-to-EAP-xp.html#content-trimming">Content Trimming</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-adding-microprofile.html">Adding MicroProfile support with JBoss EAP XP</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-adding-microprofile.html#adding-xp">Adding XP to JBoss EAP</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-adding-microprofile.html#pom-dependencies">Addition of dependencies to POM file</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-adding-microprofile.html#annotations">Addition of annotations and code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-adding-microprofile.html#deployment">Deployment to EAP instance with XP installed</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-content-trimming.html">Using content trimming to reduce resource usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-build-with-helm.html">Building JBoss EAP XP images with Helm</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-build-with-helm.html#chained-builds">S2I chained builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-deploy-with-operator.html">Deploying applications with the JBoss EAP Operator</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-deploy-with-operator.html#install">Installing the JBoss EAP Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-deploy-with-operator.html#deploy">Deploying applications</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-whats-next.html#cicd">Integration with traditional CI/CD tools</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-whats-next.html#tekton">Cloud native CI with Tekton</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Re-platform JBoss EAP on OpenShift</a></li>
+    <li><a href="01-overview.html">Overview of JBoss EAP on OpenShift</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/deewhyweb/replatform-jboss-eap-openshift/edit/master/documentation/modules/ROOT/pages/01-overview.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Setup</h1>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview of JBoss EAP on OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenShift is an ideal platform to host JBoss EAP applications.  Red Hat have developed a lot of features and tools for both JBoss EAP and OpenShift to ensure JBoss EAP workloads benefit from the functionality present in OpenShift.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="benefits"><a class="anchor" href="#benefits"></a>Benefits of running JBoss EAP workloads on OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some of the main benefits of running JBoss EAP workloads on OpenShift are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Lower operational costs, through streamlined configuration deployment and management</p>
+</li>
+<li>
+<p>Reduced resource usage, benefits of increased app density (via kubernetes nin packing) and reduced memory footprint as a result of layer trimming</p>
+</li>
+<li>
+<p>Improved developer experience, OpenShift provides developer-centric interface and tools</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cloud-native"><a class="anchor" href="#cloud-native"></a>Cloud native development</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Replatforming JBoss EAP applications on OpenShift opens up opportunities for cloud native development.  Simply re-platforming a JBoss EAP application to OpenShift will enable integration with cloud native tooling inherent in OpenShift such as disposability, concurrency, observability, and more.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="modernization"><a class="anchor" href="#modernization"></a>Application modernization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The addition of JBoss EAP XP adds additional modernization opportunities for your applications.  Such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Microprofile support i.e.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Open Tracing</p>
+</li>
+<li>
+<p>OpenAPI</p>
+</li>
+<li>
+<p>Rest Client</p>
+</li>
+<li>
+<p>Config</p>
+</li>
+<li>
+<p>JAX-RS</p>
+</li>
+<li>
+<p>Health Checks</p>
+</li>
+<li>
+<p>Fault Tolerance</p>
+</li>
+<li>
+<p>Metrics</p>
+</li>
+<li>
+<p>JWT Authentication</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Content trimming, enabling you to reduce the size of your application</p>
+</li>
+<li>
+<p>Bootable JAR support, enabling you to deploy your application as a JAR file</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deployment"><a class="anchor" href="#deployment"></a>Deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenShift provides multiple options to deploy JBoss EAP applications.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Template, providing options to build and deploy JBoss EAP applications</p>
+</li>
+<li>
+<p>Helm Chart, providing options to build and deploy JBoss EAP applications</p>
+</li>
+<li>
+<p>Operator, deploy only.  The operator is our recommended way to deploy JBoss EAP applications, including support for transaction completion and EJB remoting via static hostnames.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build-deploy"><a class="anchor" href="#build-deploy"></a>Building applications on OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images.  These images contain a runtime instance of JBoss EAP with all of the required dependencies and configuration, plus the application deployed.</p>
+</div>
+<div class="paragraph">
+<p>The JBoss EAP S2I tool performs the following steps:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/s2i.png" alt="s2i">
+</div>
+</div>
+<div class="paragraph">
+<p>The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/runtime.png" alt="runtime">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="clustering"><a class="anchor" href="#clustering"></a>Clustering JBoss EAP applications on OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Clustering support for JBoss EAP clusters is enabled by configuring the JGroups protocol stack to use either kubernetes.KUBE_PING or dns.DNS_PING. By default the JBoss EAP Operator will use kubernetes.KUBE_PING.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="autoscaling"><a class="anchor" href="#autoscaling"></a>Autoscaling applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="graceful-shutdown"><a class="anchor" href="#graceful-shutdown"></a>Graceful shutdown</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="https"><a class="anchor" href="#https"></a>HTTPS configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="platform-options"><a class="anchor" href="#platform-options"></a>OpenShift platform options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are a nummber of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Re-platform JBoss EAP on OpenShift</a></span>
+  <span class="next"><a href="pre-reqs.html">Prerequisites</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
