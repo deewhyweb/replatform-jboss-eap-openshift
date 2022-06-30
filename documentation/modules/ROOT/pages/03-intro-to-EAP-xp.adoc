@@ -1,0 +1,7 @@
+= Setup
+include::_attributes.adoc[]
+
+== Introduction to JBoss EAP XP
+
+
+

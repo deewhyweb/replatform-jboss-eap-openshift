@@ -1,20 +1,60 @@
-= Welcome to Template Tutorial
+= Welcome to Replatforming JBoss EAP workloads on OpenShift
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== Publish Services to Kubernetes
+== Replatform JBoss EAP workloads to OpenShift
 
-A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.
+This tutorial will guide you through the steps involved with re-platforming JBoss EAP applications on OpenShift.  
 
 [.tiles.browse]
 == Browse modules
 
 [.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#minikube[Minikube]
+.xref:01-overview.adoc[Overview of JBoss EAP on OpenShift]
+* xref:01-overview.adoc#benefits[Benefits of running JBoss EAP on OpenShift]
+* xref:01-overview.adoc#cloud-native[Cloud native development]
+* xref:01-overview.adoc#modernization[Modernization]
+* xref:01-overview.adoc#build-deploy[Building and deployment options]
+* xref:01-overview.adoc#clustering[Clustering]
+* xref:01-overview.adoc#autoscaling[Auto-scaling]
+* xref:01-overview.adoc#graceful-shutdown[Graceful shutdown]
+* xref:01-overview.adoc#https[HTTPS configuration]
+* xref:01-overview.adoc#platform-options[Platform options]
 
 [.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]
+.xref:02-mta.adoc[Migration Toolkit for Applications]
+* xref:02-mta.adoc#cloud-readiness[Perform cloud readiness check]
+
+[.tile]
+.xref:03-intro-to-EAP-xp.adoc[Introduction to JBoss EAP XP]
+* xref:03-intro-to-EAP-xp.adoc#microprofile[Microprofile]
+* xref:03-intro-to-EAP-xp.adoc#bootable-jar[Bootable JAR]
+* xref:03-intro-to-EAP-xp.adoc#content-trimming[Content Trimming]
+
+[.tile]
+.xref:04-adding-microprofile.adoc[Adding MicroProfile support with JBoss EAP XP]
+* xref:04-adding-microprofile.adoc#adding-xp[Adding XP to JBoss EAP]
+* xref:04-adding-microprofile.adoc#pom-dependencies[Addition of dependencies to POM file]
+* xref:04-adding-microprofile.adoc#annotations[Addition of annotations and code]
+* xref:04-adding-microprofile.adoc#deployment[Deployment to EAP instance with XP installed]
+
+[.tile]
+.xref:05-content-trimming.adoc[Using content trimming to reduce resource usage]
+
+[.tile]
+.xref:06-build-with-helm.adoc[Building JBoss EAP XP images with Helm]
+* xref:06-build-with-helm.adoc#chained-builds[S2I chained builds]
+
+[.tile]
+.xref:07-deploy-with-operator.adoc[Deploying applications with the JBoss EAP Operator]
+* xref:07-deploy-with-operator.adoc#install[Installing the JBoss EAP Operator]
+* xref:07-deploy-with-operator.adoc#deploy[Deploying applications]
+
+[.tile]
+.xref:08-observability.adoc[Observability and Monitoring]
+
+[.tile]
+.xref:09-whats-next.adoc[What's next]
+* xref:09-whats-next.adoc#cicd[Integration with traditional CI/CD tools]
+* xref:09-whats-next.adoc#tekton[Cloud native CI with Tekton]

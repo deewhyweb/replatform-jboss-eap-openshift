@@ -1,0 +1,132 @@
+= Setup
+include::_attributes.adoc[]
+
+== Migration toolkit for applications
+
+The Migration Toolkit for Applications (MTA) is an assembly of tools that support large-scale Java application modernization and migration projects across a broad range of transformations and use cases. It accelerates application code analysis, supports effort estimation, accelerates code migration, and helps you move applications to the cloud and containers.
+
+In this tutorial we will use the MTA to analyse a legacy Java application to determine it's suitability for migration to OpenShift.
+
+[#installation]
+== Installation
+
+The Migration Toolkit for applications can be used in four ways:
+
+image::mta-usage-options.png[] 
+
+* Command line interface: The mta-cli tool allows you to perform code analysis from the command line. The CLI includes a wide array of customization options, and allows you to finely tune MTA analysis options
+* Web console: The web console tool provides a graphical user interface for performing MTA analysis. 
+* IDE plugins: IDE plugins are available for Eclipse, IntelliJ, and VSCode.  Developers using the plugins can perform MTA analysis from within their IDE, and view issues and hints embedded in the code.
+* Maven plugin: The maven plugin allows code analysis to be performed as part of a maven build stage.  This allows for MTA analysis to be performed as part of a CI/CD pipeline.
+
+For this tutorial we're going to use the web console version.
+
+To install the Migration Toolkit for Applications web console we will use the Operator.  
+
+As cluster administrator, navigate to the "Operators" -> "OperatorHub".
+
+Enter "MTA" in the "Filter by keyword" box and select "Migration Toolkit for Applications Operator".
+
+image::mta-operator.png[] 
+
+From the resulting page, click on "Install" to be taken the the installation page for the MTA Operator.
+
+image::install-mta-operator.png[] 
+
+From the next page, select the "Installed Namespace" and choose or create a namespace for the MTA.
+
+Click on "Install" to start the installation.
+
+image::install-mta-operator-2.png[] 
+
+The MTA Operator will be installed in the namespace you selected.  Once it's complete you wil be able to deploy an instance of the MTA.  
+
+Go to the "Installed Operators" page and click on "Migration Toolkit for Applications Operator".
+
+image::installed-operators.png[] 
+
+Click on the "Migration Toolkit for Applications Operator" to be taken to the MTA Operator's details page, then click on "Create Instance" under provided APIs.
+
+image::installed-mta-operator.png[] 
+
+From the "Create Windup" page, take some time to review the available options and then click on "Create" to create an instance of the Windup custom resource.
+
+image::create-instance.png[] 
+
+After a few minutes the instance of the Migration Toolkit for Applications will be created, you will be able to access it from the exposed route in the namespace.
+
+image::mta-login.png[]
+
+Login with the default username and password of mta/password.
+
+You will be presented with the default landing page of the MTA, from here you can create a project and start analyzing your applications.
+
+image::mta-home.png[]
+
+[#cloud-readiness]
+== Perform cloud readiness check
+
+Click on "Create Project".
+
+image::mta-create-project.png[]
+
+Enter a name for the project e.g. "cloud-readiness-check".
+
+Next you will need to add an application.  For this tutorial we've already built a WAR file for analysis.  This can be downloaded from https://gpte-public.s3.amazonaws.com/addressbook.war.  Once you've downloaded the application, go back to the MTA web console. Then, click on Browse in the Add applications page to select the addressbook.war file from your local file system.
+
+image::mta-add-applications.png[]
+
+Click on Next
+
+You will now be presented with options for transformation targets. As we're interested in whether our application is cloud-ready we're going to select "Containerization" as the target.
+
+image::mta-select-target.png[]
+
+Click on Next.
+
+You will now be presented with options for packages. In order to accelerate the analysis, we will choose only the business packages related to our application. In the case of this application, these classes belong to the com.redhat package.
+
+image::mta-select-options.png[]
+
+Click on Next.
+
+You will now be presented with options for custom rules.
+
+image::mta-rules.png[]
+
+MTA Analysis uses a custom rule engine for the analysis. It comes with many rules out of the box to support the different migration paths, but it can be extended. Custom rules can be developed with a very simple XML syntax and used on the analysis. For this tutorial we don't need any custom rules, so click on Next.
+
+Then, you will now be presented with options for labels.
+
+image::mta-labels.png[]
+
+No custom labels are required for this analysis. Click on Next.
+
+You will now be presented with options to fine tune the analysis, for the moment we will stick with the default options.
+
+image::mta-fine-tune.png[]
+
+Click on Next.
+
+Lastly, we are presented with a summary of the configuration for our analysis.
+
+image::mta-summary.png[]
+
+Click on Save and run.
+
+Now the analysis has been scheduled, and once it is finished we will be able to access the reports. Stay on this view until the analysis is finished.
+
+image::mta-complete.png[]
+
+[#the-report]
+
+== Understanding the report
+
+The Dashboard gives an overview of the entire application migration effort. It summarizes:
+
+* The incidents and story points by category
+* The incidents and story points by level of effort of the suggested changes
+* The incidents by package
+
+Once the report is finished, click on the link to access the report. Click on addressbook.war application.
+
