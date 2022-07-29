@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Setup :: Template Tutorial</title>
-    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/eap-on-openshift/09-whats-next.html">
-    <link rel="prev" href="08-observability.html">
+    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/eap-on-openshift/04-deploy-with-operator.html">
+    <link rel="prev" href="03-build-with-helm.html">
+    <link rel="next" href="05-intro-to-EAP-xp.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -110,15 +111,15 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="04-deploy-with-operator.html">Deploying applications with the JBoss EAP Operator</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-deploy-with-operator.html#install">Installing the JBoss EAP Operator</a>
+    <a class="nav-link" href="#install">Installing the JBoss EAP Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-deploy-with-operator.html#deploy">Deploying applications</a>
+    <a class="nav-link" href="#deploy">Deploying applications</a>
   </li>
 </ul>
   </li>
@@ -161,15 +162,15 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#cicd">Integration with traditional CI/CD tools</a>
+    <a class="nav-link" href="09-whats-next.html#cicd">Integration with traditional CI/CD tools</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tekton">Cloud native CI with Tekton</a>
+    <a class="nav-link" href="09-whats-next.html#tekton">Cloud native CI with Tekton</a>
   </li>
 </ul>
   </li>
@@ -187,22 +188,76 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Re-platform JBoss EAP on OpenShift</a></li>
-    <li><a href="09-whats-next.html">What&#8217;s next</a></li>
+    <li><a href="04-deploy-with-operator.html">Deploying applications with the JBoss EAP Operator</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/deewhyweb/replatform-jboss-eap-openshift/edit/master/documentation/modules/ROOT/pages/09-whats-next.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/deewhyweb/replatform-jboss-eap-openshift/edit/master/documentation/modules/ROOT/pages/04-deploy-with-operator.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="_migration_toolkit_for_applications"><a class="anchor" href="#_migration_toolkit_for_applications"></a>Migration toolkit for applications</h2>
+<h2 id="_deploy_with_the_jboss_eap_operator"><a class="anchor" href="#_deploy_with_the_jboss_eap_operator"></a>Deploy with the JBoss EAP Operator</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>As we&#8217;ve seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use thee Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
+The JBoss EAP operator is an ideal way to deploy JBoss EAP applications on OpenShift.  The operator provides the following benefits.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys the application using stateful sets ensuring static hostnames</p>
+</li>
+<li>
+<p>Ability to manage multiple JBoss EAP applications</p>
+</li>
+<li>
+<p>Enables transaction recovery with safe shutdown.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Edit the eap74 helm chart and replace the yaml with the following</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: legacy
+  s2i:
+    amd64:
+      jdk11:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-runtime-openshift-rhel8
+      jdk8:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-openshift-rhel7
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-runtime-openshift-rhel7
+    arch: amd64
+    galleonLayers:
+      - jaxrs-server
+    jdk: '11'
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: false
+image:
+  tag: latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will disable the deployment and remove the deployment artifacts created by the helm chart.</p>
+</div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="08-observability.html">Observability and Monitoring</a></span>
+  <span class="prev"><a href="03-build-with-helm.html">Building JBoss EAP images with Helm</a></span>
+  <span class="next"><a href="05-intro-to-EAP-xp.html">Introduction to JBoss EAP XP</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
