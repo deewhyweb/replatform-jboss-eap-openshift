@@ -1,0 +1,47 @@
+= Setup
+include::_attributes.adoc[]
+
+== Deploy with the JBoss EAP Operator
+
+As we've seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use thee Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
+The JBoss EAP operator is an ideal way to deploy JBoss EAP applications on OpenShift.  The operator provides the following benefits.
+
+* Deploys the application using stateful sets ensuring static hostnames
+* Ability to manage multiple JBoss EAP applications
+* Enables transaction recovery with safe shutdown.
+
+Edit the eap74 helm chart and replace the yaml with the following
+
+[source,yaml]
+----
+build:
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: legacy
+  s2i:
+    amd64:
+      jdk11:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-runtime-openshift-rhel8
+      jdk8:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-openshift-rhel7
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-runtime-openshift-rhel7
+    arch: amd64
+    galleonLayers:
+      - jaxrs-server
+    jdk: '11'
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: false
+image:
+  tag: latest
+----
+
+This will disable the deployment and remove the deployment artifacts created by the helm chart.
+

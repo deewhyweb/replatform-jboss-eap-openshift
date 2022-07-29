@@ -1,0 +1,282 @@
+= Setup
+include::_attributes.adoc[]
+
+In this section we're going to deploy a JBoss EAP application which connects to a Postgres database.  Before we build and deploy our application we're going to deploy a postgres database.  To do this, login to OpenShift as a developer and switch to the developer ui.  From the developer ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:
+
+image::postgresql.png[]
+
+Click on "Create".  The postgres database will be deployed and available for connections.
+
+Navigate to "Secrets" on the left menu.  Select the "postgresql" secret and click on "Reveal value".  This secret was created by the template.  We will use this secret in the configuration of the Helm deployment to provide credentials such as username / password.
+
+== Configuring JBoss EAP to connect to the postgres database
+
+The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file.  
+
+In traditional JBoss EAP dpeloyments this would be done by running jboss.cli commands or editing configuration (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.
+
+In our application source code repository (https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy) we have created two folders:
+
+* extensions
+* modules
+
+
+In the extensions folder we added two files:
+
+* install.sh
+* drivers.env
+
+install.sh contains the following:
+
+[source,bash]
+----
+#!/bin/bash
+echo "Running install.sh"
+echo ${injected_dir}
+if [ "${SCRIPT_DEBUG}" = "true" ] ; then
+    set -x
+    echo "Script debugging is enabled, allowing bash commands and their arguments to be printed as they are executed"
+fi
+
+injected_dir=$1
+source /usr/local/s2i/install-common.sh
+configure_drivers ${injected_dir}/drivers.env
+----
+
+This bash script will be executed by the S2I process during the initial biuld.  "drivers.env" is referenced by this script in the configure_drivers command.
+
+[source]
+----
+#DRIVER
+DRIVERS=POSTGRESQL
+POSTGRESQL_DRIVER_NAME=postgresql
+POSTGRESQL_DRIVER_MODULE=org.postgresql
+POSTGRESQL_DRIVER_CLASS=org.postgresql.Driver
+POSTGRESQL_XA_DATASOURCE_CLASS=org.postgresql.xa.PGXADataSource
+----
+
+This will configure a driver called "POSTGRESQL" which will use a module called "org.postresql"
+
+The org.postgresql module is located in the "modules" folder.  The structure of the modules folder matches the java organization structure i.e.
+
+modules -> org -> postgresql -> main
+
+In this folder the module.xml file is as follows:
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="org.postgresql">
+  <resources>
+    <resource-root path="postgresql-jdbc.jar"/>
+  </resources>
+  <dependencies>
+    <module name="javax.api"/>
+    <module name="javax.transaction.api"/>
+  </dependencies>
+</module>
+
+----
+
+This creates a module called "org.postresql" which references the postgresql jdbc driver, also locaed in the same folder.
+
+The final step to confugure the postgresql connection is to supply the connection informatioion for the environment i.e. username, password, connection url.  We will do this by providing environment variables at deployment time, allowing us to externalize our configuration.
+
+
+== Building JBoss EAP images with Helm
+
+OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.
+
+To build a JBoss EAP application image, login to OpenShift as a developer and switch to the developer ui.  From the developer ui go to "+Add" and then select "Helm Chart" under "Developer Catalog".  
+
+image::helm1.png[]
+
+From the Helm Charts page enter "eap" in the "Filter by keyword" box.
+
+image::helm2.png[]
+
+Select "EAP74" from the filtered results.
+
+image::eap74.png[]
+
+Click on "Install Helm Chart"
+
+image::eap74-2.png[]
+
+Switch to "yaml view" and paste the following snippet
+
+[source,yaml]
+----
+build:
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: legacy
+  s2i:
+    amd64:
+      jdk11:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk11-runtime-openshift-rhel8
+      jdk8:
+        builderImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-openshift-rhel7
+        runtimeImage: registry.redhat.io/jboss-eap-7/eap74-openjdk8-runtime-openshift-rhel7
+    arch: amd64
+    jdk: '11'
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: true
+  env:
+    - name: TEST_DATABASE
+      valueFrom:
+        secretKeyRef:
+          key: database-name
+          name: postgresql
+    - name: TEST_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: database-password
+          name: postgresql
+    - name: TEST_USERNAME
+      valueFrom:
+        secretKeyRef:
+          key: database-user
+          name: postgresql
+    - name: DATASOURCES
+      value: TEST
+    - name: TEST_DRIVER
+      value: postgresql
+    - name: TEST_JNDI
+      value: 'java:/jdbc/postgresql'
+    - name: TEST_NAME
+      value: postgresql
+    - name: TEST_URL
+      value: 'jdbc:postgresql://postgresql:5432/demodb'
+    - name: TEST_NONXA
+      value: 'true'
+  livenessProbe:
+    exec:
+      command:
+        - /bin/bash
+        - '-c'
+        - /opt/eap/bin/livenessProbe.sh
+    initialDelaySeconds: 60
+  readinessProbe:
+    exec:
+      command:
+        - /bin/bash
+        - '-c'
+        - /opt/eap/bin/readinessProbe.sh
+    initialDelaySeconds: 10
+  replicas: 1
+  route:
+    enabled: true
+    tls:
+      enabled: true
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+image:
+  tag: latest
+
+----
+
+This yaml will configure the helm chart with the following:
+
+* The url of the git repo containing the application source code
+* The branch to checkout from git
+* Build time environment variable to configure an extensions folder
+* Runtime environment variables to configure the postgres database connection, to pull some of these from the secret
+
+Switch back to the form view and examine the options selected.  
+
+Click on "Install" to install the helm chart.
+
+Once the helm chart is installed two build configs will be created.  Click on "Builds" to see build configs.  
+
+image::helm-bc.png[]
+
+
+[#chained-builds]
+== S2I chained builds.
+
+Once the helm chart is installed two build configs are created to perform the S2I build. The first build performs the maven build, JBoss EAP configuration, and application deployment.  Once this is complete the second build is kicked off.  The second build takes the JBoss EAP installation created by the first build and builds a new image containing only the libraries required to run JBoss EAP and the JBoss EAP installation.  This two stage process results in a reduced image size for the final image.  
+
+image::s2i-resources.png[] 
+
+== Application deployment.
+
+Once the builds are complete the application will be deployed.  Navigate to the topology view and you will see the deployed objects.
+
+image::deployed-app.png[] 
+
+Click on the route icon to open the url associated with the application.  You will see a response like:
+
+"Re-platform JBoss EAP on OpenShift"
+
+== Testing the application.
+
+This application is a simple RestFul application which allows the query and addition of developers to a database.  
+
+We're going to test the application using curl, so the first thing we'll need to do is login using the OpenShift cli.
+
+To get the required token to login using the cli, from the top right menu select "Copy login command"
+
+image::login.png[] 
+
+You may be prompted to login again, then click on "Display token".  Copy the text in the "Log in with this token" box and paste this into your terminal.
+
+Make sure you're on the correct project, if you are not, enter 
+
+[source]
+----
+
+oc project <project-name>
+----
+
+Next we'll need to find the route for our appliction.  To do this enter the following:
+
+[source]
+----
+ROUTE_NAME=$(oc get route eap74 -o jsonpath='{.spec.host}')
+----
+
+
+Test the route with the following:
+
+[source]
+----
+curl https://$ROUTE_NAME
+
+----
+
+Now that we have a working route, we can create entries in the database with the following
+
+[source]
+----
+curl -i -X POST https://$ROUTE_NAME/resources/developers -H "content-type: application/json" -d '{"name": "phil", "surname": "hayes" }'
+
+----
+
+Once this command completes you will see a response like:
+
+[source]
+----
+{"id":1,"name":"phil","surname":"hayes"}
+----
+
+To list the records, enter
+
+[source]
+----
+curl https://$ROUTE_NAME/resources/developers
+----
+
+== Summary
+
+We have successfully built JBoss EAP image and deployed this to OpenShift.
+
+Next we will look at how to use the JBoss EAP operator to deploy the application.
