@@ -132,5 +132,9 @@ Once the report is finished, click image:mta-icon.png[] to access the report. Cl
 
 image::mta-report.png[]
 
-The analysis of the sample application shows no mandatory issues to resolve in order for this application to run in a cloud environment.  
+The analysis of the sample application shows no mandatory issues to resolve in order for this application to run in a cloud environment. 
+
+== Summary
+
+Now that we've completed the cloud readiness check we can be confident our application will run as expected on OpenShift.  Next we'll look at how to build and deploy our application with Helm.
 

@@ -12,7 +12,7 @@ OpenShift is an ideal platform to host JBoss EAP applications.  Red Hat have dev
 Some of the main benefits of running JBoss EAP workloads on OpenShift are:
 
 * Lower operational costs, through streamlined configuration deployment and management
-* Reduced resource usage, benefits of increased app density (via kubernetes nin packing) and reduced memory footprint as a result of layer trimming
+* Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of layer trimming
 * Improved developer experience, OpenShift provides developer-centric interface and tools
 
 [#cloud-native]
@@ -65,21 +65,25 @@ Clustering support for JBoss EAP clusters is enabled by configuring the JGroups 
 
 [#autoscaling]
 == Autoscaling applications
-TODO
+Re-platforming JBoss EAP applications on OpenShift opens up the ability to use kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed > 60% of memory allocated to it.
 
 [#graceful-shutdown]
 == Graceful shutdown
 
-TODO
+The JBoss EAP Operator enables safe transaction recovery in your application cluster by verifying all transactions are completed before scaling down the replicas and marking a pod as clean for termination
 
 [#https]
 == HTTPS configuration
 
-TODO
+The JBoss EAP Operator enables the configuration of HTTPS connection via the following environment variables.
+
+* HTTPS_NAME
+* HTTPS_PASSWORD
+* HTTPS_KEYSTORE
 
 [#platform-options]
 == OpenShift platform options
-There are a nummber of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).
+There are a number of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).
 
 
 // :profile: my_profile

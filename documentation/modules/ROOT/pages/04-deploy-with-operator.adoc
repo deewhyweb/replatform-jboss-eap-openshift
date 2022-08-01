@@ -48,7 +48,7 @@ This will disable the deployment and remove the deployment artifacts created by 
 [#install]
 == Install the JBoss EAP Operator.
 
-Operator need to be installed by a user with the cluster admin role.  Login to OpenShift as a cluster admin and navigate to Operators -> Operator hub.
+Operators need to be installed by a user with the cluster admin role.  Login to OpenShift as a cluster admin and navigate to Operators -> Operator hub.
 
 Enter "EAP" in the "Filter by keyword" box.  Select the "JBoss EAP" operator.
 
@@ -64,7 +64,7 @@ image::eap-operator-progress.png[]
 
 After a few minutes the JBoss EAP operator will be deployed and ready to use.
 
-Now that the JBoss EAP operator is installed we can switch back to the developer ui, all remaining tasks can be completed without cluster admin rights.
+Now that the JBoss EAP operator is installed we can switch back to the developer-ui, all remaining tasks can be completed without cluster admin rights.
 
 [#deploy]
 == Deploy JBoss EAP application with the operator
@@ -85,7 +85,7 @@ Click on Create and switch to "Yaml view"
 
 image::yaml-view.png[]
 
-Paste the following yaml tto configure the deployment
+Paste the following yaml to configure the deployment
 
 [source, yaml]
 ----
