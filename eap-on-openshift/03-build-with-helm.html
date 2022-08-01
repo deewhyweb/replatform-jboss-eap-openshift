@@ -199,7 +199,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section we&#8217;re going to deploy a JBoss EAP application which connects to a Postgres database.  Before we build and deploy our application we&#8217;re going to deploy a postgres database.  To do this, login to OpenShift as a developer and switch to the developer ui.  From the developer ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
+<p>In this section we&#8217;re going to deploy a JBoss EAP application which connects to a Postgres database.  Before we build and deploy our application we&#8217;re going to deploy the required postgres database.  To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -218,10 +218,10 @@
 <h2 id="_configuring_jboss_eap_to_connect_to_the_postgres_database"><a class="anchor" href="#_configuring_jboss_eap_to_connect_to_the_postgres_database"></a>Configuring JBoss EAP to connect to the postgres database</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file.</p>
+<p>The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file to our JBoss EAP deployment.</p>
 </div>
 <div class="paragraph">
-<p>In traditional JBoss EAP dpeloyments this would be done by running jboss.cli commands or editing configuration (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.</p>
+<p>In traditional JBoss EAP deployments this would be done by running jboss.cli commands or editing configuration (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.</p>
 </div>
 <div class="paragraph">
 <p>In our application source code repository (<a href="https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy" class="bare">https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy</a>) we have created two folders:</p>
@@ -268,7 +268,7 @@ configure_drivers ${injected_dir}/drivers.env</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This bash script will be executed by the S2I process during the initial biuld.  "drivers.env" is referenced by this script in the configure_drivers command.</p>
+<p>This bash script will be executed by the S2I process during the initial build.  "drivers.env" is referenced by this script in the configure_drivers command.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -307,10 +307,10 @@ POSTGRESQL_XA_DATASOURCE_CLASS=org.postgresql.xa.PGXADataSource</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This creates a module called "org.postresql" which references the postgresql jdbc driver, also locaed in the same folder.</p>
+<p>This creates a module called "org.postresql" which references the postgresql jdbc driver, also located in the same folder.</p>
 </div>
 <div class="paragraph">
-<p>The final step to confugure the postgresql connection is to supply the connection informatioion for the environment i.e. username, password, connection url.  We will do this by providing environment variables at deployment time, allowing us to externalize our configuration.</p>
+<p>The final step to configure the postgresql connection is to supply the connection informatioion for the environment i.e. username, password, connection url.  We will do this by providing environment variables at deployment time, allowing us to externalize our configuration, an important step towards cloud-native development.</p>
 </div>
 </div>
 </div>
@@ -321,7 +321,7 @@ POSTGRESQL_XA_DATASOURCE_CLASS=org.postgresql.xa.PGXADataSource</code></pre>
 <p>OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.</p>
 </div>
 <div class="paragraph">
-<p>To build a JBoss EAP application image, login to OpenShift as a developer and switch to the developer ui.  From the developer ui go to "+Add" and then select "Helm Chart" under "Developer Catalog".</p>
+<p>To build a JBoss EAP application image, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Helm Chart" under "Developer Catalog".</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -472,7 +472,13 @@ image:
 <h2 id="chained-builds"><a class="anchor" href="#chained-builds"></a>S2I chained builds.</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once the helm chart is installed two build configs are created to perform the S2I build. The first build performs the maven build, JBoss EAP configuration, and application deployment.  Once this is complete the second build is kicked off.  The second build takes the JBoss EAP installation created by the first build and builds a new image containing only the libraries required to run JBoss EAP and the JBoss EAP installation.  This two stage process results in a reduced image size for the final image.</p>
+<p>Once the helm chart is installed two build configs are created to perform the S2I build.</p>
+</div>
+<div class="paragraph">
+<p>The first build performs the maven build, JBoss EAP configuration, and application deployment.  Once this is complete the second build is started automatically.</p>
+</div>
+<div class="paragraph">
+<p>The second build takes the JBoss EAP installation created by the first build and builds a new image containing only the libraries required to run JBoss EAP and the JBoss EAP installation.  This two stage process results in a reduced image size for the final image.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -531,9 +537,42 @@ image:
 <div class="paragraph">
 <p>Next we&#8217;ll need to find the route for our appliction.  To do this enter the following:</p>
 </div>
-<div class="listingblock">
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_mac-osx"></a>Mac OSX</p>
+</li>
+<li>
+<p><a id="tabset1_linux"></a>Linux</p>
+</li>
+<li>
+<p><a id="tabset1_windows"></a>Windows</p>
+</li>
+</ul>
+</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ROUTE_NAME=$(oc get route eap74 -o jsonpath='{.spec.host}')</code></pre>
+<div class="tab-pane" aria-labelledby="tabset1_mac-osx">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route eap74 -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_linux">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route eap74 -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_windows">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">ROUTE_NAME=$(oc get route eap74 -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -549,7 +588,7 @@ image:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">curl -i -X POST https://$ROUTE_NAME/resources/developers -H "content-type: application/json" -d '{"name": "phil", "surname": "hayes" }'</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">curl -i -X POST https://$ROUTE_NAME/resources/developers -H "content-type: application/json" -d '{"name": "Anita", "surname": "Borg" }'</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -557,7 +596,7 @@ image:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">{"id":1,"name":"phil","surname":"hayes"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">{"id":1,"name":"Anita","surname":"Borg"}</code></pre>
 </div>
 </div>
 <div class="paragraph">

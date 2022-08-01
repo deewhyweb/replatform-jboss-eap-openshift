@@ -216,7 +216,7 @@
 <p>Lower operational costs, through streamlined configuration deployment and management</p>
 </li>
 <li>
-<p>Reduced resource usage, benefits of increased app density (via kubernetes nin packing) and reduced memory footprint as a result of layer trimming</p>
+<p>Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of layer trimming</p>
 </li>
 <li>
 <p>Improved developer experience, OpenShift provides developer-centric interface and tools</p>
@@ -342,7 +342,7 @@
 <h2 id="autoscaling"><a class="anchor" href="#autoscaling"></a>Autoscaling applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TODO</p>
+<p>Re-platforming JBoss EAP applications on OpenShift opens up the ability to use kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed &gt; 60% of memory allocated to it.</p>
 </div>
 </div>
 </div>
@@ -350,7 +350,7 @@
 <h2 id="graceful-shutdown"><a class="anchor" href="#graceful-shutdown"></a>Graceful shutdown</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TODO</p>
+<p>The JBoss EAP Operator enables safe transaction recovery in your application cluster by verifying all transactions are completed before scaling down the replicas and marking a pod as clean for termination</p>
 </div>
 </div>
 </div>
@@ -358,7 +358,20 @@
 <h2 id="https"><a class="anchor" href="#https"></a>HTTPS configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TODO</p>
+<p>The JBoss EAP Operator enables the configuration of HTTPS connection via the following environment variables.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HTTPS_NAME</p>
+</li>
+<li>
+<p>HTTPS_PASSWORD</p>
+</li>
+<li>
+<p>HTTPS_KEYSTORE</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -366,7 +379,7 @@
 <h2 id="platform-options"><a class="anchor" href="#platform-options"></a>OpenShift platform options</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are a nummber of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).</p>
+<p>There are a number of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).</p>
 </div>
 </div>
 </div>
