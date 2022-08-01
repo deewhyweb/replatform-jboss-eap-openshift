@@ -217,7 +217,7 @@ The JBoss EAP operator is an ideal way to deploy JBoss EAP applications on OpenS
 </ul>
 </div>
 <div class="paragraph">
-<p>Edit the eap74 helm chart and replace the yaml with the following</p>
+<p>First we&#8217;ll remove the deployment option from the Helm chart we created in the last section.  To do this, edit the eap74 helm chart and replace the yaml with the following</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -251,7 +251,145 @@ image:
 </div>
 </div>
 <div class="paragraph">
-<p>This will disable the deployment and remove the deployment artifacts created by the helm chart.</p>
+<p>This will disable the deployment and remove the deployment artifacts created by the helm chart.  We&#8217;ll now use the JBoss EAP Operator to deploy the image.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="install"><a class="anchor" href="#install"></a>Install the JBoss EAP Operator.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Operator need to be installed by a user with the cluster admin role.  Login to OpenShift as a cluster admin and navigate to Operators &#8594; Operator hub.</p>
+</div>
+<div class="paragraph">
+<p>Enter "EAP" in the "Filter by keyword" box.  Select the "JBoss EAP" operator.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/eap-operator.png" alt="eap operator">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Install"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/eap-operator-install.png" alt="eap operator install">
+</div>
+</div>
+<div class="paragraph">
+<p>Leave the default options unchanged and click on "Install" to make the operator available for all namespaces.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/eap-operator-progress.png" alt="eap operator progress">
+</div>
+</div>
+<div class="paragraph">
+<p>After a few minutes the JBoss EAP operator will be deployed and ready to use.</p>
+</div>
+<div class="paragraph">
+<p>Now that the JBoss EAP operator is installed we can switch back to the developer ui, all remaining tasks can be completed without cluster admin rights.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy"><a class="anchor" href="#deploy"></a>Deploy JBoss EAP application with the operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Switch back to the developer-ui and click on "+Add" to add a new application.</p>
+</div>
+<div class="paragraph">
+<p>Select "Operator Backed"</p>
+</div>
+<div class="paragraph">
+<p>You should see the "Wildfly server" option</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/select-operator.png" alt="select operator">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Wildfly server"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/wildfly-server.png" alt="wildfly server">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on Create and switch to "Yaml view"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/yaml-view.png" alt="yaml view">
+</div>
+</div>
+<div class="paragraph">
+<p>Paste the following yaml tto configure the deployment</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: wildfly.org/v1alpha1
+kind: WildFlyServer
+spec:
+  applicationImage: 'eap74:latest'
+  env:
+    - name: TEST_DATABASE
+      valueFrom:
+        secretKeyRef:
+          key: database-name
+          name: postgresql
+    - name: TEST_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: database-password
+          name: postgresql
+    - name: TEST_USERNAME
+      valueFrom:
+        secretKeyRef:
+          key: database-user
+          name: postgresql
+    - name: DATASOURCES
+      value: TEST
+    - name: TEST_DRIVER
+      value: postgresql
+    - name: TEST_JNDI
+      value: 'java:/jdbc/postgresql'
+    - name: TEST_NAME
+      value: postgresql
+    - name: TEST_URL
+      value: 'jdbc:postgresql://postgresql:5432/demodb'
+    - name: TEST_NONXA
+      value: 'true'
+  replicas: 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Create" to start the deployment.</p>
+</div>
+<div class="paragraph">
+<p>You will be taken to the topology view</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/operator-topology.png" alt="operator topology">
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll see from the topology a number of objects where created by the wildfly server custom resource.</p>
+</div>
+<div class="paragraph">
+<p>Once the pod has completed start-up, click on <span class="image"><img src="_images/open-url.png" alt="open url"></span> to view the application&#8217;s landing page.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ve successfully completed the deployment of our application with the JBoss EAP operator.  Next we&#8217;ll look at how to make our application more container-native with JBoss EAP XP (expansion pack)</p>
 </div>
 </div>
 </div>
