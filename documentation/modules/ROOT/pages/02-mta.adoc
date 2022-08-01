@@ -128,5 +128,9 @@ The Dashboard gives an overview of the entire application migration effort. It s
 * The incidents and story points by level of effort of the suggested changes
 * The incidents by package
 
-Once the report is finished, click on the link to access the report. Click on addressbook.war application.
+Once the report is finished, click image:mta-icon.png[] to access the report. Click on addressbook.war application.
+
+image::mta-report.png[]
+
+The analysis of the sample application shows no mandatory issues to resolve in order for this application to run in a cloud environment.  
 
