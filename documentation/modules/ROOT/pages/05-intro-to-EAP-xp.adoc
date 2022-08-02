@@ -3,5 +3,36 @@ include::_attributes.adoc[]
 
 == Introduction to JBoss EAP XP
 
+The JBoss EAP expansion pack provides the following a set of tools and functionality to extend JBoss EAP deployments towards cloud native development techniques.
 
+The three key areas covered by JBoss EAP XP are:
 
+* Microprofile support i.e.
+** Open Tracing
+** OpenAPI
+** Rest Client
+** Config
+** JAX-RS
+** Health Checks
+** Fault Tolerance
+** Metrics
+** JWT Authentication
+* capability trimming, enabling you to reduce the size of your application
+* Bootable JAR support, enabling you to deploy your application as a JAR file
+
+Some key points about JBoss EAP XP:
+
+* XP is released at a faster cadence than JBoss EAP, typically a 6 month release schedule.
+* XP is delivered as a separate distribution, a zip file is deployed over an existing JBoss EAP deployment
+* XP provides a path towards reactive messaging for JBoss EAP applications
+* XP has a separate life cycle to JBoss EAP
+
+== Deploying JBoss EAP XP applications on OpenShift.
+
+Red Hat provides a separate helm chart to build JBoss EAP XP images, "Eap Xp4".  Once these images are created, they can be deployed either by the helm chart or by the JBoss EAP Operator.
+
+== Summary
+
+The JBoss EAP expansion pack provides tools and functionality to implement cloud native development techniques in JBoss EAP applications.  
+
+In the next section we'll look at how to add a MicroProfile health check to our application.

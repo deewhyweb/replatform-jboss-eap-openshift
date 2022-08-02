@@ -1,5 +1,84 @@
 = Setup
 include::_attributes.adoc[]
 
-== Migration toolkit for applications
+== Capability Trimming
+
+When building an image that includes JBoss EAP, you can control the JBoss EAP features and subsystems to include in the image.
+
+The default JBoss EAP server included in S2I images includes the complete server and all features. You might want to trim the capabilities included in the provisioned server. For example, you might want to reduce the security exposure of the provisioned server, or you might want to reduce the memory footprint so it is more appropriate for a microservice container.
+
+For more information on the layers available checkout the https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.4/html/getting_started_with_jboss_eap_for_openshift_container_platform/capability-trimming-eap-foropenshift_default[documentation]
+
+In this section we're going to use EAP XP capability trimming to reduce our application image size and resource consumption.
+
+Before we start, we're going to take a baseline of the current image size and resource consumption.
+
+Image size:
+
+Looking at the current image size, we should see something like 660mb
+
+image::eap-image-size.png[]
+
+Resource usage:
+
+Looking at the current resource usage, we should see something like 405mb
+
+image::eap-resource-usage.png[]
+
+== Implement capability trimming
+
+We're going to use only two layers for our application:
+
+* jaxrs-server
+* observability
+
+Upgrade the helm chart with
+
+[source, yaml]
+----
+build:
+  bootableJar:
+    builderImage: 'registry.access.redhat.com/ubi8/openjdk-11:latest'
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: main
+  s2i:
+    jdk: '11'
+    galleonLayers:
+      - jaxrs-server
+      - observability
+    jdk11:
+      builderImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-openshift-rhel8
+      runtimeImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-runtime-openshift-rhel8
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: false
+  route:
+    enabled: true
+    tls:
+      enabled: true
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+image:
+  tag: latest
+
+----
+
+Check the image size:
+
+image::eap-galleon-image-size.png[]
+
+You should see the image size has dropped significantly to around 427mb, that's a reduction of 35%
+
+Check the resource usage:
+
+image::eap-content-trimming-ru.png[]
+
+The memory usage should have also reduced from around 405mb to 380.
 

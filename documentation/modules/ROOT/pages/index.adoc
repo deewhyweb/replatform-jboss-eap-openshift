@@ -40,7 +40,7 @@ This tutorial will guide you through the steps involved with re-platforming JBos
 .xref:05-intro-to-EAP-xp.adoc[Introduction to JBoss EAP XP]
 * xref:05-intro-to-EAP-xp.adoc#microprofile[Microprofile]
 * xref:05-intro-to-EAP-xp.adoc#bootable-jar[Bootable JAR]
-* xref:05-intro-to-EAP-xp.adoc#content-trimming[Content Trimming]
+* xref:05-intro-to-EAP-xp.adoc#content-trimming[capability trimming]
 
 [.tile]
 .xref:06-adding-microprofile.adoc[Adding MicroProfile support with JBoss EAP XP]
@@ -50,7 +50,7 @@ This tutorial will guide you through the steps involved with re-platforming JBos
 * xref:06-adding-microprofile.adoc#deployment[Deployment to EAP instance with XP installed]
 
 [.tile]
-.xref:07-content-trimming.adoc[Using content trimming to reduce resource usage]
+.xref:07-content-trimming.adoc[Using capability trimming to reduce resource usage]
 
 [.tile]
 .xref:08-observability.adoc[Observability and Monitoring]

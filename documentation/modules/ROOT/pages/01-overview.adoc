@@ -33,7 +33,7 @@ The addition of JBoss EAP XP adds additional modernization opportunities for you
 ** Fault Tolerance
 ** Metrics
 ** JWT Authentication
-* Content trimming, enabling you to reduce the size of your application
+* capability trimming, enabling you to reduce the size of your application
 * Bootable JAR support, enabling you to deploy your application as a JAR file
 
 

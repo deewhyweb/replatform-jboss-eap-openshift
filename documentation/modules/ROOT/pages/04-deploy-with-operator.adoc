@@ -91,6 +91,8 @@ Paste the following yaml to configure the deployment
 ----
 apiVersion: wildfly.org/v1alpha1
 kind: WildFlyServer
+metadata:
+  name: example
 spec:
   applicationImage: 'eap74:latest'
   env:

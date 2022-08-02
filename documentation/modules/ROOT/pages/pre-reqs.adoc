@@ -16,3 +16,4 @@ In order to run the lab in your cluster, you need to meet the requirements discu
 |https://access.redhat.com/downloads/content/290/ver=4.10/rhel---8/4.10.24/x86_64/product-software[OpenShift CLI]
 |4.0+
 |===
+

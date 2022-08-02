@@ -1,5 +1,224 @@
 = Setup
 include::_attributes.adoc[]
 
-== Migration toolkit for applications
+== Adding MicroProfile health checks
 
+The application we have deployed depends on a Postgres database to persist data.  If the database becomes unavailable the application should detect this and stop receiving connections until it becomes avalailable again.
+
+Let's test the current situation.  Go to the developer-ui and "Topology" view.
+
+Click on the postgresql deployment, and goto the details tab.
+
+image::scale-down-pg.png[]
+
+Scale down the postgresql deeployment to zero pods by clicking on the image:scale-icon.png[] icon.
+
+Wait for the deployment to scale down to zero and then try calling making a call to our application.
+
+We'll need to refresh the ROUTE_NAME variable to allow us to make calls via curl.
+
+[tabs]
+====
+Mac OSX::
++
+--
+
+[.console-input]
+[source,bash,role="copypaste"]
+----
+export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+
+----
+
+--
+Linux::
++
+--
+[source,bash,role="copypaste"]
+----
+export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+----
+
+--
+Windows::
++
+--
+[source,shell,role="copypaste"]
+----
+ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+----
+
+--
+
+====
+Test the connection with the following:
+
+[source]
+----
+curl http://$ROUTE_NAME/resources/developers
+
+----
+
+Since the application is unable to connect to the database, you should receive an error like:  
+
+[source]
+----
+Internal Server Error
+----
+
+The problem is the application is still accepting connections.
+
+Cloud native applications should be able to provide accurate health check responses.
+
+In the case of our application, we can check for a valid database connection as part of health check.
+
+JBoss EAP XP and MicroProfile allows us to simply add a custom health check which will check the database connection.
+
+To do this, we need to make 2 minor changes to our application source code.
+
+* Addition of DBConnectionHealthCheck.java
+
+[source, java]
+----
+package org.wildfly.demo;
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Readiness
+public class DBConnectionHealthCheck implements HealthCheck {
+    private static final String HC_NAME = DBConnectionHealthCheck.class.getSimpleName();
+
+    @PersistenceContext
+    EntityManager em;
+
+    @Override
+    public HealthCheckResponse call() {
+        try {
+            em.createNativeQuery("SELECT 1").getSingleResult();
+            return HealthCheckResponse.up(HC_NAME);
+        } catch (Exception e) {
+            return HealthCheckResponse.builder()
+                    .name(HC_NAME)
+                    .down()
+                    .withData("Data Base Server is not available", e.toString())
+                    .build();
+        }
+    }
+}
+----
+
+* Addition of the microprofile-health-api dependency to pom.xml
+
+[source, xml]
+----
+        <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+            <version>3.0</version>
+            <scope>provided</scope>
+        </dependency>
+----
+
+We've made these changes already in our source code reepository in the main branch. We'll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.
+
+== Building a MicroProfile application image.
+
+We're going to replace the JBoss EAP helm chart with an "EAP XP4" helm chart.  Do do this we'll delete the existing helm chart and create a new one.
+
+Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart.
+
+image::delete-helm.png[]
+
+Click on "Uninstall helm release" and then enter the name of the helm chart, "eap74"
+
+image::confirm-delete.png[]
+
+Click on uninstall.
+
+Next, click on "+Add" and select "Helm Chart"
+
+image::select-eapxp4.png[]
+
+Select "Eap Xp4" and then click on "Install Helm Chart"
+
+image::install-eapxp4.png[]
+
+Change the "Release Name" field to "eap74", this will allow our existing Operator deployment to deploy this new image.
+
+Select "yaml view" and paste the following
+
+[source, yaml]
+----
+image:
+  tag: latest
+  name: eap74
+build:
+  enabled: true
+  mode: s2i
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  output:
+    kind: ImageStreamTag
+  s2i:
+    jdk: '11'
+    jdk11:
+      builderImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-openshift-rhel8
+      runtimeImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-runtime-openshift-rhel8
+    version: latest
+  bootableJar:
+    builderImage: 'registry.access.redhat.com/ubi8/openjdk-11:latest'
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+  ref: main
+deploy:
+  enabled: false
+----
+
+image::eapxp-install-helm.png[]
+
+Click on "Install"
+
+Once the builds are complete the JBoss EAP operator will deploy a new instance of the application, because the image stream has been updated.  
+
+Wait for the new instance to be deployed.  We can now test our new health check by scaling down the postgres database again.
+
+== Testing MicroProfile health implementation
+
+Go to the developer-ui and "Topology" view.
+
+Click on the postgresql deployment, and goto the details tab.
+
+image::scale-down-pg.png[]
+
+Scale down the postgresql deeployment to zero pods by clicking on the image:scale-icon.png[] icon.
+
+Wait for the deployment to scale down to zero.
+
+After a short interval you'll notice the EAP deployment (example) is now showing 0 of 1 pods ready
+
+image::eap-not-ready.png[]
+
+This shows the health check we've deployed has now detected the postgres database is unavailable.  This instance of EAP will no longer accepts connections.  
+
+If we curl the route e.g.
+
+[source]
+----
+curl http://$ROUTE_NAME/resources/developers
+
+----
+
+We should get an immediate response showing the application is unailable.
+
+If we scale the postgres database back to 1 replica, the EAP application should recover and start to accepts connections again.
+
+== summary
+
+In this section we've seen how simple it is to implement a kubernetes compatible health check using MicroProfile health.  With some minor code changes we've introduce an application specific health check using cloud native development techniques.
+
+In the next section we'll look at how we can use EAP XP content-trimming to reduce image size and resource usage.
