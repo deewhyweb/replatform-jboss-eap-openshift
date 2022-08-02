@@ -134,7 +134,7 @@
     <a class="nav-link" href="05-intro-to-EAP-xp.html#bootable-jar">Bootable JAR</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">Content Trimming</a>
+    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">capability trimming</a>
   </li>
 </ul>
   </li>
@@ -157,7 +157,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="07-content-trimming.html">Using content trimming to reduce resource usage</a>
+    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce resource usage</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
@@ -333,6 +333,8 @@ image:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: wildfly.org/v1alpha1
 kind: WildFlyServer
+metadata:
+  name: example
 spec:
   applicationImage: 'eap74:latest'
   env:

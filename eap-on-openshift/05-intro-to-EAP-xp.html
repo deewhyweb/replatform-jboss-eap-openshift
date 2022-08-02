@@ -134,7 +134,7 @@
     <a class="nav-link" href="#bootable-jar">Bootable JAR</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#content-trimming">Content Trimming</a>
+    <a class="nav-link" href="#content-trimming">capability trimming</a>
   </li>
 </ul>
   </li>
@@ -157,7 +157,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="07-content-trimming.html">Using content trimming to reduce resource usage</a>
+    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce resource usage</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
@@ -199,7 +199,94 @@
 <div class="sect1">
 <h2 id="_introduction_to_jboss_eap_xp"><a class="anchor" href="#_introduction_to_jboss_eap_xp"></a>Introduction to JBoss EAP XP</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>The JBoss EAP expansion pack provides the following a set of tools and functionality to extend JBoss EAP deployments towards cloud native development techniques.</p>
+</div>
+<div class="paragraph">
+<p>The three key areas covered by JBoss EAP XP are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Microprofile support i.e.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Open Tracing</p>
+</li>
+<li>
+<p>OpenAPI</p>
+</li>
+<li>
+<p>Rest Client</p>
+</li>
+<li>
+<p>Config</p>
+</li>
+<li>
+<p>JAX-RS</p>
+</li>
+<li>
+<p>Health Checks</p>
+</li>
+<li>
+<p>Fault Tolerance</p>
+</li>
+<li>
+<p>Metrics</p>
+</li>
+<li>
+<p>JWT Authentication</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>capability trimming, enabling you to reduce the size of your application</p>
+</li>
+<li>
+<p>Bootable JAR support, enabling you to deploy your application as a JAR file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some key points about JBoss EAP XP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>XP is released at a faster cadence than JBoss EAP, typically a 6 month release schedule.</p>
+</li>
+<li>
+<p>XP is delivered as a separate distribution, a zip file is deployed over an existing JBoss EAP deployment</p>
+</li>
+<li>
+<p>XP provides a path towards reactive messaging for JBoss EAP applications</p>
+</li>
+<li>
+<p>XP has a separate life cycle to JBoss EAP</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploying_jboss_eap_xp_applications_on_openshift"><a class="anchor" href="#_deploying_jboss_eap_xp_applications_on_openshift"></a>Deploying JBoss EAP XP applications on OpenShift.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Red Hat provides a separate helm chart to build JBoss EAP XP images, "Eap Xp4".  Once these images are created, they can be deployed either by the helm chart or by the JBoss EAP Operator.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JBoss EAP expansion pack provides tools and functionality to implement cloud native development techniques in JBoss EAP applications.</p>
+</div>
+<div class="paragraph">
+<p>In the next section we&#8217;ll look at how to add a MicroProfile health check to our application.</p>
+</div>
 </div>
 </div>
 <nav class="pagination">

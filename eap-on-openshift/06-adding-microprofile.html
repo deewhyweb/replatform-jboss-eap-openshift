@@ -134,7 +134,7 @@
     <a class="nav-link" href="05-intro-to-EAP-xp.html#bootable-jar">Bootable JAR</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">Content Trimming</a>
+    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">capability trimming</a>
   </li>
 </ul>
   </li>
@@ -157,7 +157,7 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="07-content-trimming.html">Using content trimming to reduce resource usage</a>
+    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce resource usage</a>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
@@ -197,14 +197,314 @@
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="_migration_toolkit_for_applications"><a class="anchor" href="#_migration_toolkit_for_applications"></a>Migration toolkit for applications</h2>
+<h2 id="_adding_microprofile_health_checks"><a class="anchor" href="#_adding_microprofile_health_checks"></a>Adding MicroProfile health checks</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The application we have deployed depends on a Postgres database to persist data.  If the database becomes unavailable the application should detect this and stop receiving connections until it becomes avalailable again.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s test the current situation.  Go to the developer-ui and "Topology" view.</p>
+</div>
+<div class="paragraph">
+<p>Click on the postgresql deployment, and goto the details tab.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/scale-down-pg.png" alt="scale down pg">
+</div>
+</div>
+<div class="paragraph">
+<p>Scale down the postgresql deeployment to zero pods by clicking on the <span class="image"><img src="_images/scale-icon.png" alt="scale icon"></span> icon.</p>
+</div>
+<div class="paragraph">
+<p>Wait for the deployment to scale down to zero and then try calling making a call to our application.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll need to refresh the ROUTE_NAME variable to allow us to make calls via curl.</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_mac-osx"></a>Mac OSX</p>
+</li>
+<li>
+<p><a id="tabset1_linux"></a>Linux</p>
+</li>
+<li>
+<p><a id="tabset1_windows"></a>Windows</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_mac-osx">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_linux">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_windows">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Test the connection with the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">curl http://$ROUTE_NAME/resources/developers</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since the application is unable to connect to the database, you should receive an error like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Internal Server Error</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The problem is the application is still accepting connections.</p>
+</div>
+<div class="paragraph">
+<p>Cloud native applications should be able to provide accurate health check responses.</p>
+</div>
+<div class="paragraph">
+<p>In the case of our application, we can check for a valid database connection as part of health check.</p>
+</div>
+<div class="paragraph">
+<p>JBoss EAP XP and MicroProfile allows us to simply add a custom health check which will check the database connection.</p>
+</div>
+<div class="paragraph">
+<p>To do this, we need to make 2 minor changes to our application source code.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Addition of DBConnectionHealthCheck.java</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.wildfly.demo;
 
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Readiness
+public class DBConnectionHealthCheck implements HealthCheck {
+    private static final String HC_NAME = DBConnectionHealthCheck.class.getSimpleName();
+
+    @PersistenceContext
+    EntityManager em;
+
+    @Override
+    public HealthCheckResponse call() {
+        try {
+            em.createNativeQuery("SELECT 1").getSingleResult();
+            return HealthCheckResponse.up(HC_NAME);
+        } catch (Exception e) {
+            return HealthCheckResponse.builder()
+                    .name(HC_NAME)
+                    .down()
+                    .withData("Data Base Server is not available", e.toString())
+                    .build();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Addition of the microprofile-health-api dependency to pom.xml</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.eclipse.microprofile.health&lt;/groupId&gt;
+            &lt;artifactId&gt;microprofile-health-api&lt;/artifactId&gt;
+            &lt;version&gt;3.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve made these changes already in our source code reepository in the main branch. We&#8217;ll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_a_microprofile_application_image"><a class="anchor" href="#_building_a_microprofile_application_image"></a>Building a MicroProfile application image.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;re going to replace the JBoss EAP helm chart with an "EAP XP4" helm chart.  Do do this we&#8217;ll delete the existing helm chart and create a new one.</p>
+</div>
+<div class="paragraph">
+<p>Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/delete-helm.png" alt="delete helm">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Uninstall helm release" and then enter the name of the helm chart, "eap74"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/confirm-delete.png" alt="confirm delete">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on uninstall.</p>
+</div>
+<div class="paragraph">
+<p>Next, click on "+Add" and select "Helm Chart"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/select-eapxp4.png" alt="select eapxp4">
+</div>
+</div>
+<div class="paragraph">
+<p>Select "Eap Xp4" and then click on "Install Helm Chart"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/install-eapxp4.png" alt="install eapxp4">
+</div>
+</div>
+<div class="paragraph">
+<p>Change the "Release Name" field to "eap74", this will allow our existing Operator deployment to deploy this new image.</p>
+</div>
+<div class="paragraph">
+<p>Select "yaml view" and paste the following</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">image:
+  tag: latest
+  name: eap74
+build:
+  enabled: true
+  mode: s2i
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  output:
+    kind: ImageStreamTag
+  s2i:
+    jdk: '11'
+    jdk11:
+      builderImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-openshift-rhel8
+      runtimeImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-runtime-openshift-rhel8
+    version: latest
+  bootableJar:
+    builderImage: 'registry.access.redhat.com/ubi8/openjdk-11:latest'
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+  ref: main
+deploy:
+  enabled: false</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/eapxp-install-helm.png" alt="eapxp install helm">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Install"</p>
+</div>
+<div class="paragraph">
+<p>Once the builds are complete the JBoss EAP operator will deploy a new instance of the application, because the image stream has been updated.</p>
+</div>
+<div class="paragraph">
+<p>Wait for the new instance to be deployed.  We can now test our new health check by scaling down the postgres database again.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_microprofile_health_implementation"><a class="anchor" href="#_testing_microprofile_health_implementation"></a>Testing MicroProfile health implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Go to the developer-ui and "Topology" view.</p>
+</div>
+<div class="paragraph">
+<p>Click on the postgresql deployment, and goto the details tab.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/scale-down-pg.png" alt="scale down pg">
+</div>
+</div>
+<div class="paragraph">
+<p>Scale down the postgresql deeployment to zero pods by clicking on the <span class="image"><img src="_images/scale-icon.png" alt="scale icon"></span> icon.</p>
+</div>
+<div class="paragraph">
+<p>Wait for the deployment to scale down to zero.</p>
+</div>
+<div class="paragraph">
+<p>After a short interval you&#8217;ll notice the EAP deployment (example) is now showing 0 of 1 pods ready</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/eap-not-ready.png" alt="eap not ready">
+</div>
+</div>
+<div class="paragraph">
+<p>This shows the health check we&#8217;ve deployed has now detected the postgres database is unavailable.  This instance of EAP will no longer accepts connections.</p>
+</div>
+<div class="paragraph">
+<p>If we curl the route e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">curl http://$ROUTE_NAME/resources/developers</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We should get an immediate response showing the application is unailable.</p>
+</div>
+<div class="paragraph">
+<p>If we scale the postgres database back to 1 replica, the EAP application should recover and start to accepts connections again.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section we&#8217;ve seen how simple it is to implement a kubernetes compatible health check using MicroProfile health.  With some minor code changes we&#8217;ve introduce an application specific health check using cloud native development techniques.</p>
+</div>
+<div class="paragraph">
+<p>In the next section we&#8217;ll look at how we can use EAP XP content-trimming to reduce image size and resource usage.</p>
+</div>
 </div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="05-intro-to-EAP-xp.html">Introduction to JBoss EAP XP</a></span>
-  <span class="next"><a href="07-content-trimming.html">Using content trimming to reduce resource usage</a></span>
+  <span class="next"><a href="07-content-trimming.html">Using capability trimming to reduce resource usage</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
