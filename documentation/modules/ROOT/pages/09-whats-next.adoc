@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == What's next?
 
-In this tutorial we've looked at how to build and deploy JBoss EAP applications on OpenShift.  We've also introduced some cloud native techniques to implement intelligent health checks and monitoring.
+In this tutorial we've looked at how to build and deploy JBoss EAP applications on OpenShift.  We've also introduced some cloud native techniques to implement intelligent health checks and monitoring and integrate with OpenShift tooling.
 
 This is only the first step towards modern cloud native development.  
 
