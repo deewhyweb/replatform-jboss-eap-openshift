@@ -1,12 +1,14 @@
 = Setup
 include::_attributes.adoc[]
 
-== Observability
+== Observability and Monitoring
 
 In this section we're going to look at how to integrate our application with OpenShift observability tools, e.g. prometheus.
 
 The first step is to install the prometheus operator into the same namespace as our JBoss EAP application ("eap").  To do this, login to the administrator-ui and go to "OperatorHub".
 
+[#prometheus]
+== Deploy prometheus
 In Operator hub, filter for prometheus;
 
 image::prometheus-operator.png[]
@@ -78,6 +80,7 @@ image::prometheus-graph.png[]
 
 Yuo can see from this graph prometheus is now collecting metrics from our EAP instance.  
 
+[#custom]
 == Custom metrics
 
 Now that we have prometheus deployed and receiving metrics from our EAP instance, we can add custom metrics to report application specific data.

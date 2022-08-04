@@ -1,7 +1,7 @@
 = Setup
 include::_attributes.adoc[]
 
-== Capability Trimming
+== Using capability trimming to reduce image size
 
 When building an image that includes JBoss EAP, you can control the JBoss EAP features and subsystems to include in the image.
 
@@ -17,6 +17,7 @@ Looking at the current image size, we should see something like 660mb
 
 image::eap-image-size.png[]
 
+[#implement]
 == Implement capability trimming
 
 Our application provides a simple RestFul API, to provide this implementation our JBoss EAP deployment will need to include jax-rs libraries.  Our application also uses MicroProfile health, so these libraries are also required.

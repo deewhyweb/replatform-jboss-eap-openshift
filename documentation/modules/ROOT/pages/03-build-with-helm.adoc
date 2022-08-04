@@ -1,7 +1,20 @@
 = Setup
 include::_attributes.adoc[]
 
-In this section we're going to deploy a JBoss EAP application which connects to a Postgres database.  Before we build and deploy our application we're going to deploy the required postgres database.  To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:
+== Building for OpenShift
+
+In this section we're going to deploy a sample JBoss EAP application which connects to a Postgres database.  
+
+We'll use the JBoss EAP helm chart to create the build configs required to build the JBoss EAP runtime image. 
+
+Our initial helm chart will also deploy our application image and setup the external route, we'll modify this later in the guide to use the JBoss EAP Operator to deploy the application image.
+
+[#prereqs]
+== Pre-requisites
+
+Before we build and deploy our application we're going to deploy the required postgres database.  
+
+To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:
 
 image::postgresql.png[]
 
@@ -9,6 +22,7 @@ Click on "Create".  The postgres database will be deployed and available for con
 
 Navigate to "Secrets" on the left menu.  Select the "postgresql" secret and click on "Reveal value".  This secret was created by the template.  We will use this secret in the configuration of the Helm deployment to provide credentials such as username / password.
 
+[#connectdb]
 == Configuring JBoss EAP to connect to the postgres database
 
 The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file to our JBoss EAP deployment.  
@@ -83,6 +97,7 @@ This creates a module called "org.postresql" which references the postgresql jdb
 The final step to configure the postgresql connection is to supply the connection informatioion for the environment i.e. username, password, connection url.  We will do this by providing environment variables at deployment time, allowing us to externalize our configuration, an important step towards cloud-native development.
 
 
+[#build]
 == Building JBoss EAP images with Helm
 
 OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.
@@ -199,7 +214,6 @@ Once the helm chart is installed two build configs will be created.  Click on "B
 
 image::helm-bc.png[]
 
-
 [#chained-builds]
 == S2I chained builds.
 
@@ -211,7 +225,8 @@ The second build takes the JBoss EAP installation created by the first build and
 
 image::s2i-resources.png[] 
 
-== Application deployment.
+[#deploy]
+== Application deployment with helm
 
 Once the builds are complete the application will be deployed.  Navigate to the topology view and you will see the deployed objects.
 
@@ -221,7 +236,8 @@ Click on the route icon to open the url associated with the application.  You wi
 
 "Re-platform JBoss EAP on OpenShift"
 
-== Testing the application.
+[#testing]
+== Testing the application
 
 This application is a simple RestFul application which allows the query and addition of developers to a database.  
 

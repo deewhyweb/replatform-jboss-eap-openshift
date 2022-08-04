@@ -119,7 +119,6 @@ Now the analysis has been scheduled, and once it is finished we will be able to 
 image::mta-complete.png[]
 
 [#the-report]
-
 == Understanding the report
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:

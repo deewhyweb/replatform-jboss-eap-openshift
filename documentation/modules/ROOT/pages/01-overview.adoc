@@ -36,18 +36,8 @@ The addition of JBoss EAP XP adds additional modernization opportunities for you
 * capability trimming, enabling you to reduce the size of your application
 * Bootable JAR support, enabling you to deploy your application as a JAR file
 
-
-[#deployment]
-== Deployment
-OpenShift provides multiple options to deploy JBoss EAP applications.
-
-* Template, providing options to build and deploy JBoss EAP applications
-* Helm Chart, providing options to build and deploy JBoss EAP applications
-* Operator, deploy only.  The operator is our recommended way to deploy JBoss EAP applications, including support for transaction completion and EJB remoting via static hostnames.
-
-
-[#build-deploy]
-== Building applications on OpenShift
+[#build]
+== Building for OpenShift
 OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images.  These images contain a runtime instance of JBoss EAP with all of the required dependencies and configuration, plus the application deployed. 
 
 The JBoss EAP S2I tool performs the following steps:
@@ -57,6 +47,14 @@ image::s2i.png[]
 The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application.  
 
 image::runtime.png[] 
+
+[#deployment]
+== Deploying on OpenShift
+OpenShift provides multiple options to deploy JBoss EAP applications.
+
+* Template, providing options to build and deploy JBoss EAP applications
+* Helm Chart, providing options to build and deploy JBoss EAP applications
+* Operator, deploy only.  The operator is our recommended way to deploy JBoss EAP applications, including support for transaction completion and EJB remoting via static hostnames.
 
 [#clustering]
 == Clustering JBoss EAP applications on OpenShift

@@ -27,7 +27,8 @@ Some key points about JBoss EAP XP:
 * XP provides a path towards reactive messaging for JBoss EAP applications
 * XP has a separate life cycle to JBoss EAP
 
-== Deploying JBoss EAP XP applications on OpenShift.
+[#xponopenshift]
+== Deploying JBoss EAP XP applications on OpenShift
 
 Red Hat provides a separate helm chart to build JBoss EAP XP images, "Eap Xp4".  Once these images are created, they can be deployed either by the helm chart or by the JBoss EAP Operator.
 

@@ -1,7 +1,7 @@
 = Setup
 include::_attributes.adoc[]
 
-== Deploy with the JBoss EAP Operator
+== Deploying applications with the JBoss EAP Operator
 
 As we've seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use thee Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
 The JBoss EAP operator is an ideal way to deploy JBoss EAP applications on OpenShift.  The operator provides the following benefits.

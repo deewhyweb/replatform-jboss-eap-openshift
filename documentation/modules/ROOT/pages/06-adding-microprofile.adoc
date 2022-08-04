@@ -1,7 +1,7 @@
 = Setup
 include::_attributes.adoc[]
 
-== Adding MicroProfile health checks
+== Adding MicroProfile support with JBoss EAP XP
 
 The application we have deployed depends on a Postgres database to persist data.  If the database becomes unavailable the application should detect this and stop receiving connections until it becomes avalailable again.
 
@@ -68,6 +68,8 @@ Internal Server Error
 
 The problem is the application is still accepting connections.
 
+[#health]
+== Adding a MicroProfile health check
 Cloud native applications should be able to provide accurate health check responses.
 
 In the case of our application, we can check for a valid database connection as part of health check.
@@ -126,7 +128,8 @@ public class DBConnectionHealthCheck implements HealthCheck {
 
 We've made these changes already in our source code reepository in the main branch. We'll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.
 
-== Building a MicroProfile application image.
+[#build]
+== Building a MicroProfile application image
 
 We're going to replace the JBoss EAP helm chart with an "EAP XP4" helm chart.  Do do this we'll delete the existing helm chart and create a new one.
 
@@ -187,6 +190,7 @@ Once the builds are complete the JBoss EAP operator will deploy a new instance o
 
 Wait for the new instance to be deployed.  We can now test our new health check by scaling down the postgres database again.
 
+[#testing]
 == Testing MicroProfile health implementation
 
 Go to the developer-ui and "Topology" view.
