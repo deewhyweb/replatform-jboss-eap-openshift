@@ -1,5 +1,21 @@
 = Setup
 include::_attributes.adoc[]
 
-== Migration toolkit for applications
+== What's next?
+
+In this tutorial we've looked at how to build and deploy JBoss EAP applications on OpenShift.  We've also introduced some cloud native techniques to implement intelligent health checks and monitoring.
+
+This is only the first step towards modern cloud native development.  
+
+In addition to health checks and metrics, MicroProfile adds functionality for a range of cloud native techniques such as:
+
+** Open Tracing
+** OpenAPI
+** Rest Client
+** Config
+** JAX-RS
+** Fault Tolerance
+** JWT Authentication
+
+Having your applications deployed on OpenShift opens up many additional possibilties such as integration with Service Mesh and CICD depeloymnt with Tekton and ArgoCD.
 
