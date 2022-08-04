@@ -197,9 +197,321 @@
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="_migration_toolkit_for_applications"><a class="anchor" href="#_migration_toolkit_for_applications"></a>Migration toolkit for applications</h2>
+<h2 id="_observability"><a class="anchor" href="#_observability"></a>Observability</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>In this section we&#8217;re going to look at how to integrate our application with OpenShift observability tools, e.g. prometheus.</p>
+</div>
+<div class="paragraph">
+<p>The first step is to install the prometheus operator into the same namespace as our JBoss EAP application ("eap").  To do this, login to the administrator-ui and go to "OperatorHub".</p>
+</div>
+<div class="paragraph">
+<p>In Operator hub, filter for prometheus;</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-operator.png" alt="prometheus operator">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Prometheus Operator".  You will be prompted with a community message, click on continue:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/community-warning.png" alt="community warning">
+</div>
+</div>
+<div class="paragraph">
+<p>From the next screen, click on "Install"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-operator-install.png" alt="prometheus operator install">
+</div>
+</div>
+<div class="paragraph">
+<p>On the main installation page, ensure "eap" is selected as the "Installed namespace" and click on "Install"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/promeetheus-namespace.png" alt="promeetheus namespace">
+</div>
+</div>
+<div class="paragraph">
+<p>Once the installation has finished, you will be prompted with:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-install-done.png" alt="prometheus install done">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "View operator" to go to the main Prometheus operator page.</p>
+</div>
+<div class="paragraph">
+<p>From this page you can deploy an instance of prometheus, but also deploy other prometheus custom resources.  For example, the service monitor custom resource will configure a deployed prometheus instance to pull metrics from specified services.</p>
+</div>
+<div class="paragraph">
+<p>Switch to the "Service Monitor" tab.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/service-monitor.png" alt="service monitor">
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll notice a service monitor object already exists called "example".  Clicking on this will reveal the contents of the object.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/service-monitor-detail.png" alt="service monitor detail">
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll notice this service monitor has the following labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">    app.kubernetes.io/managed-by: eap-operator
+    app.kubernetes.io/name: example
+    app.openshift.io/runtime: eap</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This record was created by the JBoss EAP operator when our JBoss EAP application was deployed.  Once we deploy an instance of promethues this object will automatically configure prometheus to pull metrics from our running EAP instance.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s go ahead and deploy an instance of prometheus.  Navigate to the "Prometheus" tab.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-instance.png" alt="prometheus instance">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Create Prometheus"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-prometheus.png" alt="create prometheus">
+</div>
+</div>
+<div class="paragraph">
+<p>Leave the defaults unchanged and click on "Create"</p>
+</div>
+<div class="paragraph">
+<p>Once the prometheus pods are running we can access our prometheus ui using port forwarding.  At the command line enter the following</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc port-forward -n eap svc/prometheus-operated 9090</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using your browser, navigate to <a href="http://127.0.0.1:9090/" class="bare">http://127.0.0.1:9090/</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-landing.png" alt="prometheus landing">
+</div>
+</div>
+<div class="paragraph">
+<p>Enter "base_memory_usedHeap_bytes" in the search box and click on "graph"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-graph.png" alt="prometheus graph">
+</div>
+</div>
+<div class="paragraph">
+<p>Yuo can see from this graph prometheus is now collecting metrics from our EAP instance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_custom_metrics"><a class="anchor" href="#_custom_metrics"></a>Custom metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that we have prometheus deployed and receiving metrics from our EAP instance, we can add custom metrics to report application specific data.</p>
+</div>
+<div class="paragraph">
+<p>With Microprofile it&#8217;s very easy to do this.</p>
+</div>
+<div class="paragraph">
+<p>In the source code for our application we add the following to our pom.xml file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.eclipse.microprofile.metrics&lt;/groupId&gt;
+            &lt;artifactId&gt;microprofile-metrics-api&lt;/artifactId&gt;
+            &lt;version&gt;3.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In DevelopersResouorce.Java we make two changes.</p>
+</div>
+<div class="paragraph">
+<p>The addiition of the following to the imports:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import org.eclipse.microprofile.metrics.annotation.Counted;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the following annotation to the getAll() definition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Counted(name = "developersAll", displayName="Calls to developers getAll", description = "How many calls have been since startup.")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve created a branch with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
+  bootableJar:
+    builderImage: 'registry.access.redhat.com/ubi8/openjdk-11:latest'
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: observability
+  s2i:
+    galleonLayers:
+      - jaxrs-server
+      - observability
+    jdk: '11'
+    jdk11:
+      builderImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-openshift-rhel8
+      runtimeImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-runtime-openshift-rhel8
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: false
+  route:
+    enabled: true
+    tls:
+      enabled: true
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+image:
+  tag: latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will change will configure the artifact build to pull from the observability branch.</p>
+</div>
+<div class="paragraph">
+<p>Click on upgrade.</p>
+</div>
+<div class="paragraph">
+<p>Next, goto builds and select "eap74-build-artifacts".</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/builds.png" alt="builds">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Actions" &#8594; "Start build"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/start-build.png" alt="start build">
+</div>
+</div>
+<div class="paragraph">
+<p>This will kick off a new artifact build which in turn will trigger a new runtime build which will eventually trigger a new deployment of the application by the operator.</p>
+</div>
+<div class="paragraph">
+<p>Once the new version of the application is deployed goto the prometheus ui (<a href="http://127.0.0.1:9090/" class="bare">http://127.0.0.1:9090/</a>) and click on the "Graph" tab.</p>
+</div>
+<div class="paragraph">
+<p>In the query field enter "developers" and select "application_org_wildfly_demo_DevelopersResource_developersAll_total"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-developers.png" alt="prometheus developers">
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;re now receiving custom metrics in prometheus from our application.</p>
+</div>
+<div class="paragraph">
+<p>Make some calls to our developers endpoint:</p>
+</div>
+<div class="tabset is-loading">
+<div class="ulist tabs">
+<ul>
+<li>
+<p><a id="tabset1_mac-osx"></a>Mac OSX</p>
+</li>
+<li>
+<p><a id="tabset1_linux"></a>Linux</p>
+</li>
+<li>
+<p><a id="tabset1_windows"></a>Windows</p>
+</li>
+</ul>
+</div>
+<div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_mac-osx">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_linux">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+<div class="tab-pane" aria-labelledby="tabset1_windows">
+<div class="listingblock copypaste">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Test the route with the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">curl https://$ROUTE_NAME/resources/developers</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Back in our prometheus ui click on "Execute", you should see hits registered for our custom metric.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/prometheus-custom-result.png" alt="prometheus custom result">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ve seen in this section how to deploy prometheus and view default and custom metrics from our JBoss EAP deployment.
+In the next section we&#8217;ll look at some possible next steps towards cloud native development for legacy Java application.</p>
+</div>
 </div>
 </div>
 <nav class="pagination">

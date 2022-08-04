@@ -206,16 +206,13 @@
 <p>The default JBoss EAP server included in S2I images includes the complete server and all features. You might want to trim the capabilities included in the provisioned server. For example, you might want to reduce the security exposure of the provisioned server, or you might want to reduce the memory footprint so it is more appropriate for a microservice container.</p>
 </div>
 <div class="paragraph">
-<p>For more information on the layers available checkout the <a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.4/html/getting_started_with_jboss_eap_for_openshift_container_platform/capability-trimming-eap-foropenshift_default">documentation</a></p>
+<p>For more information on the layers available checkout the <a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.4/html/getting_started_with_jboss_eap_for_openshift_container_platform/capability-trimming-eap-foropenshift_default" class="bare">https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.4/html/getting_started_with_jboss_eap_for_openshift_container_platform/capability-trimming-eap-foropenshift_default</a> [documentation]</p>
 </div>
 <div class="paragraph">
-<p>In this section we&#8217;re going to use EAP XP capability trimming to reduce our application image size and resource consumption.</p>
+<p>In this section we&#8217;re going to use EAP XP capability trimming to reduce our application image size.</p>
 </div>
 <div class="paragraph">
-<p>Before we start, we&#8217;re going to take a baseline of the current image size and resource consumption.</p>
-</div>
-<div class="paragraph">
-<p>Image size:</p>
+<p>Before we start, we&#8217;re going to take a baseline of the current image size.</p>
 </div>
 <div class="paragraph">
 <p>Looking at the current image size, we should see something like 660mb</p>
@@ -225,24 +222,16 @@
 <img src="_images/eap-image-size.png" alt="eap image size">
 </div>
 </div>
-<div class="paragraph">
-<p>Resource usage:</p>
-</div>
-<div class="paragraph">
-<p>Looking at the current resource usage, we should see something like 405mb</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/eap-resource-usage.png" alt="eap resource usage">
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_implement_capability_trimming"><a class="anchor" href="#_implement_capability_trimming"></a>Implement capability trimming</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We&#8217;re going to use only two layers for our application:</p>
+<p>Our application provides a simple RestFul API, to provide this implementation our JBoss EAP deployment will need to include jax-rs libraries.  Our application also uses MicroProfile health, so these libraries are also required.</p>
+</div>
+<div class="paragraph">
+<p>Looking at the list of layers available from EAP XP, we will need to include:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -255,7 +244,17 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Upgrade the helm chart with</p>
+<p>To make this change to our application build process we can upgrade the helm chart with the addition of the following to the s2i block.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">    galleonLayers:
+      - jaxrs-server
+      - observability</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -293,7 +292,26 @@ image:
 </div>
 </div>
 <div class="paragraph">
-<p>Check the image size:</p>
+<p>Next, goto builds and select "eap74-build-artifacts".</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/builds.png" alt="builds">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on "Actions" &#8594; "Start build"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/start-build.png" alt="start build">
+</div>
+</div>
+<div class="paragraph">
+<p>This will kick off a new artifact build which in turn will trigger a new runtime build which will eventually trigger a new deployment of the application by the operator.</p>
+</div>
+<div class="paragraph">
+<p>Once the new image is deployed, check the image size:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -301,18 +319,19 @@ image:
 </div>
 </div>
 <div class="paragraph">
-<p>You should see the image size has dropped significantly to around 427mb, that&#8217;s a reduction of 35%</p>
+<p>You should see the image size has dropped significantly to around 427mb, that&#8217;s a reduction of 35%.</p>
 </div>
 <div class="paragraph">
-<p>Check the resource usage:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/eap-content-trimming-ru.png" alt="eap content trimming ru">
+<p>In addition to this reduced image size we have also reduced the potential attack surface of the appliation making it more secure.</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>summary</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The memory usage should have also reduced from around 405mb to 380.</p>
+<p>In this section we&#8217;ve reduced our application image size and attack surface with the simple addition of galleonLayers instruction to our helm chart.
+In the next section we&#8217;ll look at how to implement observability with MicroProfile.</p>
 </div>
 </div>
 </div>
