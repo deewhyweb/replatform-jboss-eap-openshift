@@ -1,5 +1,232 @@
 = Setup
 include::_attributes.adoc[]
 
-== Migration toolkit for applications
+== Observability
+
+In this section we're going to look at how to integrate our application with OpenShift observability tools, e.g. prometheus.
+
+The first step is to install the prometheus operator into the same namespace as our JBoss EAP application ("eap").  To do this, login to the administrator-ui and go to "OperatorHub".
+
+In Operator hub, filter for prometheus;
+
+image::prometheus-operator.png[]
+
+Click on "Prometheus Operator".  You will be prompted with a community message, click on continue:
+
+image::community-warning.png[]
+
+From the next screen, click on "Install"
+
+image::prometheus-operator-install.png[]
+
+On the main installation page, ensure "eap" is selected as the "Installed namespace" and click on "Install"
+
+image::promeetheus-namespace.png[]
+
+Once the installation has finished, you will be prompted with:
+
+image::prometheus-install-done.png[]
+
+Click on "View operator" to go to the main Prometheus operator page.
+
+From this page you can deploy an instance of prometheus, but also deploy other prometheus custom resources.  For example, the service monitor custom resource will configure a deployed prometheus instance to pull metrics from specified services.  
+
+Switch to the "Service Monitor" tab.
+
+image::service-monitor.png[]
+
+You'll notice a service monitor object already exists called "example".  Clicking on this will reveal the contents of the object.
+
+image::service-monitor-detail.png[]
+
+You'll notice this service monitor has the following labels:
+
+[source, yaml]
+----
+    app.kubernetes.io/managed-by: eap-operator
+    app.kubernetes.io/name: example
+    app.openshift.io/runtime: eap
+----
+
+This record was created by the JBoss EAP operator when our JBoss EAP application was deployed.  Once we deploy an instance of promethues this object will automatically configure prometheus to pull metrics from our running EAP instance.
+
+Let's go ahead and deploy an instance of prometheus.  Navigate to the "Prometheus" tab.
+
+image::prometheus-instance.png[]
+
+Click on "Create Prometheus"
+
+image::create-prometheus.png[]
+
+Leave the defaults unchanged and click on "Create"
+
+Once the prometheus pods are running we can access our prometheus ui using port forwarding.  At the command line enter the following
+
+[source, bash]
+----
+oc port-forward -n eap svc/prometheus-operated 9090
+
+----
+
+Using your browser, navigate to http://127.0.0.1:9090/
+
+image::prometheus-landing.png[]
+
+Enter "base_memory_usedHeap_bytes" in the search box and click on "graph"
+
+image::prometheus-graph.png[]
+
+Yuo can see from this graph prometheus is now collecting metrics from our EAP instance.  
+
+== Custom metrics
+
+Now that we have prometheus deployed and receiving metrics from our EAP instance, we can add custom metrics to report application specific data.
+
+With Microprofile it's very easy to do this.
+
+In the source code for our application we add the following to our pom.xml file:
+
+[source,xml]
+----
+        <dependency>
+            <groupId>org.eclipse.microprofile.metrics</groupId>
+            <artifactId>microprofile-metrics-api</artifactId>
+            <version>3.0</version>
+            <scope>provided</scope>
+        </dependency>
+----
+
+In DevelopersResouorce.Java we make two changes.
+
+The addiition of the following to the imports:
+
+[source, java]
+----
+import org.eclipse.microprofile.metrics.annotation.Counted;
+----
+
+And the following annotation to the getAll() definition.
+
+[source,java]
+----
+    @Counted(name = "developersAll", displayName="Calls to developers getAll", description = "How many calls have been since startup.")
+----
+
+We've created a branch with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.
+
+[source, yaml]
+----
+build:
+  bootableJar:
+    builderImage: 'registry.access.redhat.com/ubi8/openjdk-11:latest'
+  enabled: true
+  env:
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+  mode: s2i
+  output:
+    kind: ImageStreamTag
+  ref: observability
+  s2i:
+    galleonLayers:
+      - jaxrs-server
+      - observability
+    jdk: '11'
+    jdk11:
+      builderImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-openshift-rhel8
+      runtimeImage: registry.redhat.io/jboss-eap-7/eap-xp4-openjdk11-runtime-openshift-rhel8
+    version: latest
+  uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
+deploy:
+  enabled: false
+  route:
+    enabled: true
+    tls:
+      enabled: true
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+image:
+  tag: latest
+
+----
+
+This will change will configure the artifact build to pull from the observability branch.
+
+Click on upgrade.
+
+Next, goto builds and select "eap74-build-artifacts".
+
+image::builds.png[]
+
+Click on "Actions" -> "Start build"
+
+image::start-build.png[]
+
+This will kick off a new artifact build which in turn will trigger a new runtime build which will eventually trigger a new deployment of the application by the operator.  
+
+Once the new version of the application is deployed goto the prometheus ui (http://127.0.0.1:9090/) and click on the "Graph" tab.
+
+In the query field enter "developers" and select "application_org_wildfly_demo_DevelopersResource_developersAll_total"
+
+image::prometheus-developers.png[]
+
+We're now receiving custom metrics in prometheus from our application.
+
+Make some calls to our developers endpoint:
+
+[tabs]
+====
+Mac OSX::
++
+--
+
+[.console-input]
+[source,bash,role="copypaste"]
+----
+export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+
+----
+
+--
+Linux::
++
+--
+[source,bash,role="copypaste"]
+----
+export ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+----
+
+--
+Windows::
++
+--
+[source,shell,role="copypaste"]
+----
+ROUTE_NAME=$(oc get route example-route -o jsonpath='{.spec.host}')
+----
+
+--
+
+====
+Test the route with the following:
+
+[source]
+----
+curl https://$ROUTE_NAME/resources/developers
+
+----
+
+Back in our prometheus ui click on "Execute", you should see hits registered for our custom metric.
+
+image::prometheus-custom-result.png[]
+
+== Summary
+
+We've seen in this section how to deploy prometheus and view default and custom metrics from our JBoss EAP deployment.
+In the next section we'll look at some possible next steps towards cloud native development for legacy Java application.
+
+
+
+
+
 
