@@ -65,13 +65,16 @@
     <a class="nav-link" href="01-overview.html#modernization">Modernization</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#build-deploy">Building and deployment options</a>
+    <a class="nav-link" href="01-overview.html#build">Building for OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#clustering">Clustering</a>
+    <a class="nav-link" href="01-overview.html#deployment">Deploying on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#autoscaling">Auto-scaling</a>
+    <a class="nav-link" href="01-overview.html#clustering">Clustering JBoss EAP applications on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-overview.html#autoscaling">Autoscaling applications</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-overview.html#graceful-shutdown">Graceful shutdown</a>
@@ -80,7 +83,7 @@
     <a class="nav-link" href="01-overview.html#https">HTTPS configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#platform-options">Platform options</a>
+    <a class="nav-link" href="01-overview.html#platform-options">OpenShift platform options</a>
   </li>
 </ul>
   </li>
@@ -107,7 +110,22 @@
     <a class="nav-link" href="03-build-with-helm.html">Building JBoss EAP images with Helm</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#prereqs">Pre-requisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#connectdb">Configuring JBoss EAP to connect to the postgres database</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#build">Building JBoss EAP images with Helm</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#chained-builds">S2I chained builds</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#deploy">Application deployment with helm</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#testing">Testing the application</a>
   </li>
 </ul>
   </li>
@@ -119,7 +137,7 @@
     <a class="nav-link" href="04-deploy-with-operator.html#install">Installing the JBoss EAP Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-deploy-with-operator.html#deploy">Deploying applications</a>
+    <a class="nav-link" href="04-deploy-with-operator.html#deploy">Deploy JBoss EAP application with the operator</a>
   </li>
 </ul>
   </li>
@@ -128,13 +146,7 @@
     <a class="nav-link" href="05-intro-to-EAP-xp.html">Introduction to JBoss EAP XP</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#microprofile">Microprofile</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#bootable-jar">Bootable JAR</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">capability trimming</a>
+    <a class="nav-link" href="05-intro-to-EAP-xp.html#xponopenshift">Deploying JBoss EAP XP applications on OpenShift</a>
   </li>
 </ul>
   </li>
@@ -143,36 +155,39 @@
     <a class="nav-link" href="06-adding-microprofile.html">Adding MicroProfile support with JBoss EAP XP</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#adding-xp">Adding XP to JBoss EAP</a>
+    <a class="nav-link" href="06-adding-microprofile.html#health">Adding a MicroProfile health check</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#pom-dependencies">Addition of dependencies to POM file</a>
+    <a class="nav-link" href="06-adding-microprofile.html#build">Building a MicroProfile application image</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#annotations">Addition of annotations and code</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#deployment">Deployment to EAP instance with XP installed</a>
+    <a class="nav-link" href="06-adding-microprofile.html#testing">Testing MicroProfile health implementation</a>
   </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce resource usage</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
+    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce image size</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-whats-next.html#cicd">Integration with traditional CI/CD tools</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-whats-next.html#tekton">Cloud native CI with Tekton</a>
+    <a class="nav-link" href="07-content-trimming.html#implement">Implement capability trimming</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-observability.html#prometheus">Deploy prometheus</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-observability.html#custom">Custom metrics</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
   </li>
 </ul>
   </li>
@@ -196,10 +211,28 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Setup</h1>
-<div id="preamble">
+<div class="sect1">
+<h2 id="_building_for_openshift"><a class="anchor" href="#_building_for_openshift"></a>Building for OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section we&#8217;re going to deploy a JBoss EAP application which connects to a Postgres database.  Before we build and deploy our application we&#8217;re going to deploy the required postgres database.  To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
+<p>In this section we&#8217;re going to deploy a sample JBoss EAP application which connects to a Postgres database.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use the JBoss EAP helm chart to create the build configs required to build the JBoss EAP runtime image.</p>
+</div>
+<div class="paragraph">
+<p>Our initial helm chart will also deploy our application image and setup the external route, we&#8217;ll modify this later in the guide to use the JBoss EAP Operator to deploy the application image.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prereqs"><a class="anchor" href="#prereqs"></a>Pre-requisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we build and deploy our application we&#8217;re going to deploy the required postgres database.</p>
+</div>
+<div class="paragraph">
+<p>To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -215,7 +248,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuring_jboss_eap_to_connect_to_the_postgres_database"><a class="anchor" href="#_configuring_jboss_eap_to_connect_to_the_postgres_database"></a>Configuring JBoss EAP to connect to the postgres database</h2>
+<h2 id="connectdb"><a class="anchor" href="#connectdb"></a>Configuring JBoss EAP to connect to the postgres database</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file to our JBoss EAP deployment.</p>
@@ -315,7 +348,7 @@ POSTGRESQL_XA_DATASOURCE_CLASS=org.postgresql.xa.PGXADataSource</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_building_jboss_eap_images_with_helm"><a class="anchor" href="#_building_jboss_eap_images_with_helm"></a>Building JBoss EAP images with Helm</h2>
+<h2 id="build"><a class="anchor" href="#build"></a>Building JBoss EAP images with Helm</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.</p>
@@ -488,7 +521,7 @@ image:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_application_deployment"><a class="anchor" href="#_application_deployment"></a>Application deployment.</h2>
+<h2 id="deploy"><a class="anchor" href="#deploy"></a>Application deployment with helm</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Once the builds are complete the application will be deployed.  Navigate to the topology view and you will see the deployed objects.</p>
@@ -507,7 +540,7 @@ image:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_testing_the_application"><a class="anchor" href="#_testing_the_application"></a>Testing the application.</h2>
+<h2 id="testing"><a class="anchor" href="#testing"></a>Testing the application</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This application is a simple RestFul application which allows the query and addition of developers to a database.</p>

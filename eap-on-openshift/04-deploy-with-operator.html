@@ -65,13 +65,16 @@
     <a class="nav-link" href="01-overview.html#modernization">Modernization</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#build-deploy">Building and deployment options</a>
+    <a class="nav-link" href="01-overview.html#build">Building for OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#clustering">Clustering</a>
+    <a class="nav-link" href="01-overview.html#deployment">Deploying on OpenShift</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#autoscaling">Auto-scaling</a>
+    <a class="nav-link" href="01-overview.html#clustering">Clustering JBoss EAP applications on OpenShift</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-overview.html#autoscaling">Autoscaling applications</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-overview.html#graceful-shutdown">Graceful shutdown</a>
@@ -80,7 +83,7 @@
     <a class="nav-link" href="01-overview.html#https">HTTPS configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-overview.html#platform-options">Platform options</a>
+    <a class="nav-link" href="01-overview.html#platform-options">OpenShift platform options</a>
   </li>
 </ul>
   </li>
@@ -107,7 +110,22 @@
     <a class="nav-link" href="03-build-with-helm.html">Building JBoss EAP images with Helm</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-build-with-helm.html#prereqs">Pre-requisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-build-with-helm.html#connectdb">Configuring JBoss EAP to connect to the postgres database</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-build-with-helm.html#build">Building JBoss EAP images with Helm</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-build-with-helm.html#chained-builds">S2I chained builds</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-build-with-helm.html#deploy">Application deployment with helm</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-build-with-helm.html#testing">Testing the application</a>
   </li>
 </ul>
   </li>
@@ -119,7 +137,7 @@
     <a class="nav-link" href="#install">Installing the JBoss EAP Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#deploy">Deploying applications</a>
+    <a class="nav-link" href="#deploy">Deploy JBoss EAP application with the operator</a>
   </li>
 </ul>
   </li>
@@ -128,13 +146,7 @@
     <a class="nav-link" href="05-intro-to-EAP-xp.html">Introduction to JBoss EAP XP</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#microprofile">Microprofile</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#bootable-jar">Bootable JAR</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-intro-to-EAP-xp.html#content-trimming">capability trimming</a>
+    <a class="nav-link" href="05-intro-to-EAP-xp.html#xponopenshift">Deploying JBoss EAP XP applications on OpenShift</a>
   </li>
 </ul>
   </li>
@@ -143,36 +155,39 @@
     <a class="nav-link" href="06-adding-microprofile.html">Adding MicroProfile support with JBoss EAP XP</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#adding-xp">Adding XP to JBoss EAP</a>
+    <a class="nav-link" href="06-adding-microprofile.html#health">Adding a MicroProfile health check</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#pom-dependencies">Addition of dependencies to POM file</a>
+    <a class="nav-link" href="06-adding-microprofile.html#build">Building a MicroProfile application image</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#annotations">Addition of annotations and code</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-adding-microprofile.html#deployment">Deployment to EAP instance with XP installed</a>
+    <a class="nav-link" href="06-adding-microprofile.html#testing">Testing MicroProfile health implementation</a>
   </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce resource usage</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
+    <a class="nav-link" href="07-content-trimming.html">Using capability trimming to reduce image size</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-whats-next.html#cicd">Integration with traditional CI/CD tools</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-whats-next.html#tekton">Cloud native CI with Tekton</a>
+    <a class="nav-link" href="07-content-trimming.html#implement">Implement capability trimming</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-observability.html">Observability and Monitoring</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-observability.html#prometheus">Deploy prometheus</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-observability.html#custom">Custom metrics</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-whats-next.html">What&#8217;s next</a>
   </li>
 </ul>
   </li>
@@ -197,7 +212,7 @@
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="_deploy_with_the_jboss_eap_operator"><a class="anchor" href="#_deploy_with_the_jboss_eap_operator"></a>Deploy with the JBoss EAP Operator</h2>
+<h2 id="_deploying_applications_with_the_jboss_eap_operator"><a class="anchor" href="#_deploying_applications_with_the_jboss_eap_operator"></a>Deploying applications with the JBoss EAP Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As we&#8217;ve seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use thee Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
