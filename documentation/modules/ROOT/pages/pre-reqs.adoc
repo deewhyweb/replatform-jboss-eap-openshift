@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 [#prerequisite]
 == Prerequisites
 
-In order to run the lab in your cluster, you need to meet the requirements discussed below.
+In order to run these steps in your cluster, you need to meet the requirements discussed below.
 
 [cols="1,1"]
 |===
