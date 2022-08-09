@@ -390,7 +390,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ve created a branch with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.</p>
+<p>We&#8217;ve created a branch called "observability" with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -417,18 +417,12 @@
   uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
 deploy:
   enabled: false
-  route:
-    enabled: true
-    tls:
-      enabled: true
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
 image:
   tag: latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This will change will configure the artifact build to pull from the observability branch.</p>
+<p>This change will configure the artifact build to pull from the observability branch.</p>
 </div>
 <div class="paragraph">
 <p>Click on upgrade.</p>

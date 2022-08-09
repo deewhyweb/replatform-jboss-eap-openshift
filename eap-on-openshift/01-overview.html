@@ -215,7 +215,7 @@
 <h2 id="overview"><a class="anchor" href="#overview"></a>Overview of JBoss EAP on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>OpenShift is an ideal platform to host JBoss EAP applications.  Red Hat have developed a lot of features and tools for both JBoss EAP and OpenShift to ensure JBoss EAP workloads benefit from the functionality present in OpenShift.</p>
+<p>OpenShift is an ideal environment to re-platform JBoss EAP applications.  Red Hat have delivered many features and tools to ensure JBoss EAP workloads make efficient use of resources and benefit from the functionality present in OpenShift.</p>
 </div>
 </div>
 </div>
@@ -231,10 +231,13 @@
 <p>Lower operational costs, through streamlined configuration deployment and management</p>
 </li>
 <li>
-<p>Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of layer trimming</p>
+<p>Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of content trimming</p>
 </li>
 <li>
 <p>Improved developer experience, OpenShift provides developer-centric interface and tools</p>
+</li>
+<li>
+<p>Streamlined deployment and day 2 operations through integration with ci/cd tooling</p>
 </li>
 </ul>
 </div>
@@ -244,7 +247,7 @@
 <h2 id="cloud-native"><a class="anchor" href="#cloud-native"></a>Cloud native development</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Replatforming JBoss EAP applications on OpenShift opens up opportunities for cloud native development.  Simply re-platforming a JBoss EAP application to OpenShift will enable integration with cloud native tooling inherent in OpenShift such as disposability, concurrency, observability, and more.</p>
+<p>Replatforming JBoss EAP applications on OpenShift opens up many opportunities for cloud native development, with zero or minimal code changes.  Re-platforming a JBoss EAP application to OpenShift will enable integration with cloud native tooling inherent in OpenShift such as disposability, concurrency, observability, and more.</p>
 </div>
 </div>
 </div>
@@ -252,7 +255,7 @@
 <h2 id="modernization"><a class="anchor" href="#modernization"></a>Application modernization</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The addition of JBoss EAP XP adds additional modernization opportunities for your applications.  Such as:</p>
+<p>The addition of JBoss EAP XP adds modernization opportunities for your applications.  Such as:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -291,10 +294,10 @@
 </div>
 </li>
 <li>
-<p>capability trimming, enabling you to reduce the size of your application</p>
+<p>Capability trimming, enabling you to reduce the size of your application image and resource usage</p>
 </li>
 <li>
-<p>Bootable JAR support, enabling you to deploy your application as a JAR file</p>
+<p>Bootable JAR support, enabling you to deploy your application as a JAR file containing the JBoss EAP runtime plus application deployment</p>
 </li>
 </ul>
 </div>
@@ -304,7 +307,7 @@
 <h2 id="build"><a class="anchor" href="#build"></a>Building for OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images.  These images contain a runtime instance of JBoss EAP with all of the required dependencies and configuration, plus the application deployed.</p>
+<p>OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images.</p>
 </div>
 <div class="paragraph">
 <p>The JBoss EAP S2I tool performs the following steps:</p>
@@ -315,7 +318,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application.</p>
+<p>The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application e.g. maven.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -339,7 +342,7 @@
 <p>Helm Chart, providing options to build and deploy JBoss EAP applications</p>
 </li>
 <li>
-<p>Operator, deploy only.  The operator is our recommended way to deploy JBoss EAP applications, including support for transaction completion and EJB remoting via static hostnames.</p>
+<p>Operator, deploy only.  The JBoss EAP operator is the most comprehensive way to deploy JBoss EAP applications, including support for transaction completion,EJB remoting via static hostnames, and integration with OpenShift monitoring tools.</p>
 </li>
 </ul>
 </div>
@@ -349,7 +352,7 @@
 <h2 id="clustering"><a class="anchor" href="#clustering"></a>Clustering JBoss EAP applications on OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Clustering support for JBoss EAP clusters is enabled by configuring the JGroups protocol stack to use either kubernetes.KUBE_PING or dns.DNS_PING. By default the JBoss EAP Operator will use kubernetes.KUBE_PING.</p>
+<p>Clustering support for JBoss EAP clusters is enabled by configuring the JGroups protocol stack to use either kubernetes.KUBE_PING or dns.DNS_PING. Applications deployed using the JBoss EAP Operator will use kubernetes.KUBE_PING.</p>
 </div>
 </div>
 </div>
@@ -357,7 +360,7 @@
 <h2 id="autoscaling"><a class="anchor" href="#autoscaling"></a>Autoscaling applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Re-platforming JBoss EAP applications on OpenShift opens up the ability to use kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed &gt; 60% of memory allocated to it.</p>
+<p>JBoss EAP applications deployed on OpenShift can take advantage of kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed &gt; 60% of memory allocated to it.</p>
 </div>
 </div>
 </div>

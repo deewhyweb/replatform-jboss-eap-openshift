@@ -221,7 +221,7 @@
 <p>Let&#8217;s test the current situation.  Go to the developer-ui and "Topology" view.</p>
 </div>
 <div class="paragraph">
-<p>Click on the postgresql deployment, and goto the details tab.</p>
+<p>Click on the postgresql deployment, and go to the details tab.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -292,7 +292,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The problem is the application is still accepting connections.</p>
+<p>This example demonstrates the application is still available and accepting connections.  The applicaton is attemptng to access the database and returning an error to the user.</p>
 </div>
 </div>
 </div>
@@ -300,7 +300,7 @@
 <h2 id="health"><a class="anchor" href="#health"></a>Adding a MicroProfile health check</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Cloud native applications should be able to provide accurate health check responses.</p>
+<p>Cloud native applications should be able to avoid this situation by using accurate health check responses.</p>
 </div>
 <div class="paragraph">
 <p>In the case of our application, we can check for a valid database connection as part of health check.</p>
@@ -370,7 +370,7 @@ public class DBConnectionHealthCheck implements HealthCheck {
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ve made these changes already in our source code reepository in the main branch. We&#8217;ll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.</p>
+<p>We&#8217;ve made these changes already in our source code reepository in the "main" branch. We&#8217;ll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.</p>
 </div>
 </div>
 </div>

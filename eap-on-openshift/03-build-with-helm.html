@@ -215,7 +215,7 @@
 <h2 id="_building_for_openshift"><a class="anchor" href="#_building_for_openshift"></a>Building for OpenShift</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section we&#8217;re going to deploy a sample JBoss EAP application which connects to a Postgres database.</p>
+<p>In this section we&#8217;re going to deploy a sample JBoss EAP application which uses a Postgres database for persistence.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll use the JBoss EAP helm chart to create the build configs required to build the JBoss EAP runtime image.</p>
@@ -229,10 +229,22 @@
 <h2 id="prereqs"><a class="anchor" href="#prereqs"></a>Pre-requisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before we build and deploy our application we&#8217;re going to deploy the required postgres database.</p>
+<p>Before we build and deploy our application we&#8217;re going to create a project and deploy the required postgres database.</p>
 </div>
 <div class="paragraph">
-<p>To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
+<p>To do this, login to OpenShift as a developer and switch to the developer-ui.</p>
+</div>
+<div class="paragraph">
+<p>Click the Project drop-down menu to see a list of all available projects. Select Create Project</p>
+</div>
+<div class="paragraph">
+<p>In the Create Project dialog box, enter a unique name, such as "eap", in the Name field.</p>
+</div>
+<div class="paragraph">
+<p>Click Create.</p>
+</div>
+<div class="paragraph">
+<p>Click on "+Add" on the left menu and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -254,7 +266,7 @@
 <p>The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file to our JBoss EAP deployment.</p>
 </div>
 <div class="paragraph">
-<p>In traditional JBoss EAP deployments this would be done by running jboss.cli commands or editing configuration (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.</p>
+<p>In traditional JBoss EAP deployments this would be done by running jboss.cli commands or configuration file (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.</p>
 </div>
 <div class="paragraph">
 <p>In our application source code repository (<a href="https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy" class="bare">https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy</a>) we have created two folders:</p>
@@ -302,6 +314,9 @@ configure_drivers ${injected_dir}/drivers.env</code></pre>
 </div>
 <div class="paragraph">
 <p>This bash script will be executed by the S2I process during the initial build.  "drivers.env" is referenced by this script in the configure_drivers command.</p>
+</div>
+<div class="paragraph">
+<p>drivers.env contains the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -351,7 +366,7 @@ POSTGRESQL_XA_DATASOURCE_CLASS=org.postgresql.xa.PGXADataSource</code></pre>
 <h2 id="build"><a class="anchor" href="#build"></a>Building JBoss EAP images with Helm</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.</p>
+<p>OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP application images.</p>
 </div>
 <div class="paragraph">
 <p>To build a JBoss EAP application image, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Helm Chart" under "Developer Catalog".</p>
@@ -564,7 +579,7 @@ image:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc project &lt;project-name&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">oc project eap</code></pre>
 </div>
 </div>
 <div class="paragraph">
