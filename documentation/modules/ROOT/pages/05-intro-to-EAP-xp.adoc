@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Introduction to JBoss EAP XP
 
-The JBoss EAP expansion pack provides the following a set of tools and functionality to extend JBoss EAP deployments towards cloud native development techniques.
+The JBoss EAP expansion pack provides a set of tools and functionality to extend JBoss EAP deployments with cloud native development techniques.
 
 The three key areas covered by JBoss EAP XP are:
 
@@ -17,7 +17,7 @@ The three key areas covered by JBoss EAP XP are:
 ** Fault Tolerance
 ** Metrics
 ** JWT Authentication
-* capability trimming, enabling you to reduce the size of your application
+* Capability trimming, enabling you to reduce the size of your application
 * Bootable JAR support, enabling you to deploy your application as a JAR file
 
 Some key points about JBoss EAP XP:

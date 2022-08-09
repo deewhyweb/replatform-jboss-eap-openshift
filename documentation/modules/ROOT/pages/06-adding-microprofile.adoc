@@ -7,7 +7,7 @@ The application we have deployed depends on a Postgres database to persist data.
 
 Let's test the current situation.  Go to the developer-ui and "Topology" view.
 
-Click on the postgresql deployment, and goto the details tab.
+Click on the postgresql deployment, and go to the details tab.
 
 image::scale-down-pg.png[]
 
@@ -66,11 +66,11 @@ Since the application is unable to connect to the database, you should receive a
 Internal Server Error
 ----
 
-The problem is the application is still accepting connections.
+This example demonstrates the application is still available and accepting connections.  The applicaton is attemptng to access the database and returning an error to the user.
 
 [#health]
 == Adding a MicroProfile health check
-Cloud native applications should be able to provide accurate health check responses.
+Cloud native applications should be able to avoid this situation by using accurate health check responses.
 
 In the case of our application, we can check for a valid database connection as part of health check.
 
@@ -126,7 +126,7 @@ public class DBConnectionHealthCheck implements HealthCheck {
         </dependency>
 ----
 
-We've made these changes already in our source code reepository in the main branch. We'll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.
+We've made these changes already in our source code reepository in the "main" branch. We'll need to rebuild our JBoss EAP image using the EAP XP4 helm chart.
 
 [#build]
 == Building a MicroProfile application image

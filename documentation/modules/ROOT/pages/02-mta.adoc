@@ -3,9 +3,9 @@ include::_attributes.adoc[]
 
 == Migration toolkit for applications
 
-The Migration Toolkit for Applications (MTA) is an assembly of tools that support large-scale Java application modernization and migration projects across a broad range of transformations and use cases. It accelerates application code analysis, supports effort estimation, accelerates code migration, and helps you move applications to the cloud and containers.
+The Migration Toolkit for Applications (MTA) is a tool that support large-scale Java application modernization and migration projects across a broad range of transformations and use cases. It accelerates application code analysis, supports effort estimation, accelerates code migration, and helps you move applications to the cloud and containers.
 
-In this tutorial we will use the MTA to analyse a legacy Java application to determine it's suitability for migration to OpenShift.
+In this tutorial we will use the MTA to analyse a legacy Java application to determine it's suitability for migration to OpenShift (cloud readiness).
 
 [#installation]
 == Installation
@@ -23,7 +23,7 @@ For this tutorial we're going to use the web console version.
 
 To install the Migration Toolkit for Applications web console we will use the Operator.  
 
-As cluster administrator, navigate to the "Operators" -> "OperatorHub".
+As cluster administrator using the administrator-ui, navigate to the "Operators" -> "OperatorHub".
 
 Enter "MTA" in the "Filter by keyword" box and select "Migration Toolkit for Applications Operator".
 
@@ -41,7 +41,7 @@ image::install-mta-operator-2.png[]
 
 The MTA Operator will be installed in the namespace you selected.  Once it's complete you wil be able to deploy an instance of the MTA.  
 
-Go to the "Installed Operators" page and click on "Migration Toolkit for Applications Operator".
+Go to the "Installed Operators" page to view the list of operators available in this namespace.
 
 image::installed-operators.png[] 
 
@@ -59,7 +59,7 @@ image::mta-login.png[]
 
 Login with the default username and password of mta/password.
 
-You will be presented with the default landing page of the MTA, from here you can create a project and start analyzing your applications.
+You will be presented with the landing page of the MTA, from here you can create a project and start analyzing your applications.
 
 image::mta-home.png[]
 

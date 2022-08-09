@@ -5,7 +5,9 @@
 [.text-center.strong]
 == Replatform JBoss EAP workloads to OpenShift
 
-This tutorial will guide you through the steps involved with re-platforming JBoss EAP applications on OpenShift.  
+This tutorial will guide you through the steps involved with re-platforming JBoss EAP applications on OpenShift.
+
+In addition to covering how to build and deploy JBoss EAP images on OpenShift this guide also introduces cloud native development techniques with MicroProfile using the JBoss EAP expansion pack.
 
 [.tiles.browse]
 == Browse modules

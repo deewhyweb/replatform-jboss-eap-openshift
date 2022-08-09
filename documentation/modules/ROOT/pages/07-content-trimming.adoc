@@ -64,12 +64,6 @@ build:
   uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
 deploy:
   enabled: false
-  route:
-    enabled: true
-    tls:
-      enabled: true
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
 image:
   tag: latest
 

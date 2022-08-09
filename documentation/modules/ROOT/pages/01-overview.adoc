@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 [#overview]
 == Overview of JBoss EAP on OpenShift
 
-OpenShift is an ideal platform to host JBoss EAP applications.  Red Hat have developed a lot of features and tools for both JBoss EAP and OpenShift to ensure JBoss EAP workloads benefit from the functionality present in OpenShift.
+OpenShift is an ideal environment to re-platform JBoss EAP applications.  Red Hat have delivered many features and tools to ensure JBoss EAP workloads make efficient use of resources and benefit from the functionality present in OpenShift.
 
 [#benefits]
 == Benefits of running JBoss EAP workloads on OpenShift
@@ -12,16 +12,17 @@ OpenShift is an ideal platform to host JBoss EAP applications.  Red Hat have dev
 Some of the main benefits of running JBoss EAP workloads on OpenShift are:
 
 * Lower operational costs, through streamlined configuration deployment and management
-* Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of layer trimming
+* Reduced resource usage, benefits of increased app density (via kubernetes bin packing) and reduced memory footprint as a result of content trimming
 * Improved developer experience, OpenShift provides developer-centric interface and tools
+* Streamlined deployment and day 2 operations through integration with ci/cd tooling
 
 [#cloud-native]
 == Cloud native development
-Replatforming JBoss EAP applications on OpenShift opens up opportunities for cloud native development.  Simply re-platforming a JBoss EAP application to OpenShift will enable integration with cloud native tooling inherent in OpenShift such as disposability, concurrency, observability, and more.  
+Replatforming JBoss EAP applications on OpenShift opens up many opportunities for cloud native development, with zero or minimal code changes.  Re-platforming a JBoss EAP application to OpenShift will enable integration with cloud native tooling inherent in OpenShift such as disposability, concurrency, observability, and more.  
 
 [#modernization]
 == Application modernization
-The addition of JBoss EAP XP adds additional modernization opportunities for your applications.  Such as:
+The addition of JBoss EAP XP adds modernization opportunities for your applications.  Such as:
 
 * Microprofile support i.e.
 ** Open Tracing
@@ -33,18 +34,18 @@ The addition of JBoss EAP XP adds additional modernization opportunities for you
 ** Fault Tolerance
 ** Metrics
 ** JWT Authentication
-* capability trimming, enabling you to reduce the size of your application
-* Bootable JAR support, enabling you to deploy your application as a JAR file
+* Capability trimming, enabling you to reduce the size of your application image and resource usage
+* Bootable JAR support, enabling you to deploy your application as a JAR file containing the JBoss EAP runtime plus application deployment
 
 [#build]
 == Building for OpenShift
-OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images.  These images contain a runtime instance of JBoss EAP with all of the required dependencies and configuration, plus the application deployed. 
+OpenShift provides Source to Image (S2I) tooling to build JBoss EAP application images. 
 
 The JBoss EAP S2I tool performs the following steps:
 
 image::s2i.png[] 
 
-The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application.  
+The resulting image benefits from reduced image size by creating a runtime image which does not require the tools required to build the application e.g. maven.  
 
 image::runtime.png[] 
 
@@ -54,16 +55,15 @@ OpenShift provides multiple options to deploy JBoss EAP applications.
 
 * Template, providing options to build and deploy JBoss EAP applications
 * Helm Chart, providing options to build and deploy JBoss EAP applications
-* Operator, deploy only.  The operator is our recommended way to deploy JBoss EAP applications, including support for transaction completion and EJB remoting via static hostnames.
+* Operator, deploy only.  The JBoss EAP operator is the most comprehensive way to deploy JBoss EAP applications, including support for transaction completion,EJB remoting via static hostnames, and integration with OpenShift monitoring tools.
 
 [#clustering]
 == Clustering JBoss EAP applications on OpenShift
-Clustering support for JBoss EAP clusters is enabled by configuring the JGroups protocol stack to use either kubernetes.KUBE_PING or dns.DNS_PING. By default the JBoss EAP Operator will use kubernetes.KUBE_PING.
-
+Clustering support for JBoss EAP clusters is enabled by configuring the JGroups protocol stack to use either kubernetes.KUBE_PING or dns.DNS_PING. Applications deployed using the JBoss EAP Operator will use kubernetes.KUBE_PING.
 
 [#autoscaling]
 == Autoscaling applications
-Re-platforming JBoss EAP applications on OpenShift opens up the ability to use kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed > 60% of memory allocated to it.
+JBoss EAP applications deployed on OpenShift can take advantage of kubernetes auto-scaling functionality to add instances of JBoss EAP application pods based on resource consumption, for example when a pod has consumed > 60% of memory allocated to it.
 
 [#graceful-shutdown]
 == Graceful shutdown
@@ -82,19 +82,3 @@ The JBoss EAP Operator enables the configuration of HTTPS connection via the fol
 [#platform-options]
 == OpenShift platform options
 There are a number of ways the OpenShift platform can deployed and consumed, depending on the requirements and location.  OpenShift can be deployed self managed on internal infrastructure, self managed on cloud infrastructure, or consumed as a fully managed service from Red Hat and cloud provider e.g. Azure Red Hat Openshift (ARO) or Red Hat OpenShift Service on AWS (ROSA).
-
-
-// :profile: my_profile
-
-// include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/kubernetes-setup.adoc[]
-
-// And then you are ready for start using Kubernetes:
-
-// image::kubelogo.png[]
-
-// [#downloadtutorial]
-// == Get tutorial sources
-
-// :tutorial-url: https://github.com/redhat-developer-demos/rhd-tutorial-common.git
-// :folder: my_folder
-// include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/download-sources.adoc[]

@@ -115,7 +115,7 @@ And the following annotation to the getAll() definition.
     @Counted(name = "developersAll", displayName="Calls to developers getAll", description = "How many calls have been since startup.")
 ----
 
-We've created a branch with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.
+We've created a branch called "observability" with these changes implemented.  Using the developer-ui, navigate to "Helm" and click on the extended menu option for the "eap74" helm chart. Select upgrade and replace the yaml with the following.
 
 [source, yaml]
 ----
@@ -142,18 +142,12 @@ build:
   uri: 'https://github.com/deewhyweb/wildfly-s2i-db.git'
 deploy:
   enabled: false
-  route:
-    enabled: true
-    tls:
-      enabled: true
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
 image:
   tag: latest
 
 ----
 
-This will change will configure the artifact build to pull from the observability branch.
+This change will configure the artifact build to pull from the observability branch.
 
 Click on upgrade.
 

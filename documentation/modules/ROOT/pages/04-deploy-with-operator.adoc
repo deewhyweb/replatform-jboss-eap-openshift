@@ -3,12 +3,13 @@ include::_attributes.adoc[]
 
 == Deploying applications with the JBoss EAP Operator
 
-As we've seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use thee Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
+As we've seen from the previous sections the Helm chart will create the required objects to build and deploy JBoss EAP applications.  An alternate approach is to use the Helm chart to perform the build only and the JBoss EAP operator to deploy the applicatioon.
 The JBoss EAP operator is an ideal way to deploy JBoss EAP applications on OpenShift.  The operator provides the following benefits.
 
 * Deploys the application using stateful sets ensuring static hostnames
 * Ability to manage multiple JBoss EAP applications
 * Enables transaction recovery with safe shutdown.
+* Integration with OpenShift monitoring tools
 
 First we'll remove the deployment option from the Helm chart we created in the last section.  To do this, edit the eap74 helm chart and replace the yaml with the following
 
@@ -132,7 +133,7 @@ You will be taken to the topology view
 
 image::operator-topology.png[]
 
-You'll see from the topology a number of objects where created by the wildfly server custom resource.  
+You'll see from the topology a number of objects are created by the wildfly server custom resource.  
 
 Once the pod has completed start-up, click on image:open-url.png[] to view the application's landing page.
 

@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Building for OpenShift
 
-In this section we're going to deploy a sample JBoss EAP application which connects to a Postgres database.  
+In this section we're going to deploy a sample JBoss EAP application which uses a Postgres database for persistence.  
 
 We'll use the JBoss EAP helm chart to create the build configs required to build the JBoss EAP runtime image. 
 
@@ -12,9 +12,17 @@ Our initial helm chart will also deploy our application image and setup the exte
 [#prereqs]
 == Pre-requisites
 
-Before we build and deploy our application we're going to deploy the required postgres database.  
+Before we build and deploy our application we're going to create a project and deploy the required postgres database.  
 
-To do this, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:
+To do this, login to OpenShift as a developer and switch to the developer-ui.  
+
+Click the Project drop-down menu to see a list of all available projects. Select Create Project
+
+In the Create Project dialog box, enter a unique name, such as "eap", in the Name field.
+
+Click Create.
+
+Click on "+Add" on the left menu and then select "Database", choose the "PostgreSQL" template and then click on "Instantiate Template".  Fill out the form as shown below:
 
 image::postgresql.png[]
 
@@ -27,13 +35,12 @@ Navigate to "Secrets" on the left menu.  Select the "postgresql" secret and clic
 
 The appliction we are deploying needs to connect to the Postgres database instance.  To do this we need to add a module, driver, and jdbc jar file to our JBoss EAP deployment.  
 
-In traditional JBoss EAP deployments this would be done by running jboss.cli commands or editing configuration (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.
+In traditional JBoss EAP deployments this would be done by running jboss.cli commands or configuration file (e.g. standalone.xml).  When deploying on OpenShift the S2I process will perform these configurations for us.
 
 In our application source code repository (https://github.com/deewhyweb/wildfly-s2i-db/tree/legacy) we have created two folders:
 
 * extensions
 * modules
-
 
 In the extensions folder we added two files:
 
@@ -58,6 +65,8 @@ configure_drivers ${injected_dir}/drivers.env
 ----
 
 This bash script will be executed by the S2I process during the initial build.  "drivers.env" is referenced by this script in the configure_drivers command.
+
+drivers.env contains the following:
 
 [source]
 ----
@@ -96,11 +105,10 @@ This creates a module called "org.postresql" which references the postgresql jdb
 
 The final step to configure the postgresql connection is to supply the connection informatioion for the environment i.e. username, password, connection url.  We will do this by providing environment variables at deployment time, allowing us to externalize our configuration, an important step towards cloud-native development.
 
-
 [#build]
 == Building JBoss EAP images with Helm
 
-OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP applications.  In this tutorial we will be using helm to build and deploy our JBoss EAP image.
+OpenShift provides JBoss EAP helm charts to assist with the build and deploy of JBoss EAP application images. 
 
 To build a JBoss EAP application image, login to OpenShift as a developer and switch to the developer-ui.  From the developer-ui go to "+Add" and then select "Helm Chart" under "Developer Catalog".  
 
@@ -254,7 +262,7 @@ Make sure you're on the correct project, if you are not, enter
 [source]
 ----
 
-oc project <project-name>
+oc project eap
 ----
 
 Next we'll need to find the route for our appliction.  To do this enter the following:
