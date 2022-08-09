@@ -7,7 +7,7 @@ In this tutorial we've looked at how to build and deploy JBoss EAP applications 
 
 This is only the first step towards modern cloud native development.  
 
-In addition to health checks and metrics, MicroProfile adds functionality for a range of cloud native techniques such as:
+In addition to health checks and metrics, MicroProfile includes functionality for a range of cloud native techniques such as:
 
 ** Open Tracing
 ** OpenAPI
