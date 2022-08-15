@@ -76,7 +76,7 @@ In the case of our application, we can check for a valid database connection as 
 
 JBoss EAP XP and MicroProfile allows us to simply add a custom health check which will check the database connection.
 
-To do this, we need to make 2 minor changes to our application source code.
+To do this, we need to make 3 minor changes to our application source code.
 
 * Addition of DBConnectionHealthCheck.java
 
