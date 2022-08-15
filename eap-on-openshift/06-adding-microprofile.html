@@ -355,6 +355,28 @@ public class DBConnectionHealthCheck implements HealthCheck {
 <div class="ulist">
 <ul>
 <li>
+<p>Addition of the jboss-eap-xp-microprofile dependencyManagement to pom.xml</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">  &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.jboss.bom&lt;/groupId&gt;
+                &lt;artifactId&gt;jboss-eap-xp-microprofile&lt;/artifactId&gt;
+                &lt;version&gt;3.0.0.GA&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
 <p>Addition of the microprofile-health-api dependency to pom.xml</p>
 </li>
 </ul>
