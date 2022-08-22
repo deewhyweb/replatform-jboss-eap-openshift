@@ -348,7 +348,7 @@
 <p>Enter a name for the project e.g. "cloud-readiness-check".</p>
 </div>
 <div class="paragraph">
-<p>Next you will need to add an application.  For this tutorial we&#8217;ve already built a WAR file for analysis.  This can be downloaded from <a href="https://gpte-public.s3.amazonaws.com/addressbook.war" class="bare">https://gpte-public.s3.amazonaws.com/addressbook.war</a>.  Once you&#8217;ve downloaded the application, go back to the MTA web console. Then, click on Browse in the Add applications page to select the addressbook.war file from your local file system.</p>
+<p>Next you will need to add an application.  For this tutorial we&#8217;ve already built a WAR file for analysis.  This can be downloaded from //TODO "store war file somewhere".  Once you&#8217;ve downloaded the application, go back to the MTA web console. Then, click on Browse in the Add applications page to select the addressbook.war file from your local file system.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -370,7 +370,7 @@
 <p>Click on Next.</p>
 </div>
 <div class="paragraph">
-<p>You will now be presented with options for packages. In order to accelerate the analysis, we will choose only the business packages related to our application. In the case of this application, these classes belong to the com.redhat package.</p>
+<p>You will now be presented with options for packages. In order to accelerate the analysis, we will choose only the business packages related to our application. In the case of this application, these classes belong to the org package.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -454,7 +454,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Once the report is finished, click <span class="image"><img src="_images/mta-icon.png" alt="mta icon"></span> to access the report. Click on addressbook.war application.</p>
+<p>Once the report is finished, click <span class="image"><img src="_images/mta-icon.png" alt="mta icon"></span> to access the report. Click on wildfly-demo.war application.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -462,7 +462,37 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The analysis of the sample application shows no mandatory issues to resolve in order for this application to run in a cloud environment.</p>
+<p>The analysis of the sample application shows one mandatory issues to resolve in order for this application to run in a cloud environment.</p>
+</div>
+<div class="paragraph">
+<p>Click on "Issues" to view the "Cloud mandatory" issues to be resolved before we can deploy this application to the cloud.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/mta-issues.png" alt="mta issues">
+</div>
+</div>
+<div class="paragraph">
+<p>This page shows us the issue relates to the use of a Java Remote Method Invocation (RMI) call.</p>
+</div>
+<div class="paragraph">
+<p>Click on "Java Remote Method Invocation (RMI) API" to expand this selection.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/mta-expand.png" alt="mta expand">
+</div>
+</div>
+<div class="paragraph">
+<p>We can see the file location of the issue along with some more detail.  Clicking on the file name will bring us to the location in the source code.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/mta-file.png" alt="mta file">
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue our application code will need to be refactored to remove the RMI calls, we&#8217;ve done this already in another branch which we&#8217;ll use to deploy to OpenShift.</p>
 </div>
 </div>
 </div>
