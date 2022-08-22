@@ -72,7 +72,7 @@ image::mta-create-project.png[]
 
 Enter a name for the project e.g. "cloud-readiness-check".
 
-Next you will need to add an application.  For this tutorial we've already built a WAR file for analysis.  This can be downloaded from https://gpte-public.s3.amazonaws.com/addressbook.war.  Once you've downloaded the application, go back to the MTA web console. Then, click on Browse in the Add applications page to select the addressbook.war file from your local file system.
+Next you will need to add an application.  For this tutorial we've already built a WAR file for analysis.  This can be downloaded from //TODO "store war file somewhere".  Once you've downloaded the application, go back to the MTA web console. Then, click on Browse in the Add applications page to select the addressbook.war file from your local file system.
 
 image::mta-add-applications.png[]
 
@@ -84,7 +84,7 @@ image::mta-select-target.png[]
 
 Click on Next.
 
-You will now be presented with options for packages. In order to accelerate the analysis, we will choose only the business packages related to our application. In the case of this application, these classes belong to the com.redhat package.
+You will now be presented with options for packages. In order to accelerate the analysis, we will choose only the business packages related to our application. In the case of this application, these classes belong to the org package.
 
 image::mta-select-options.png[]
 
@@ -127,11 +127,28 @@ The Dashboard gives an overview of the entire application migration effort. It s
 * The incidents and story points by level of effort of the suggested changes
 * The incidents by package
 
-Once the report is finished, click image:mta-icon.png[] to access the report. Click on addressbook.war application.
+Once the report is finished, click image:mta-icon.png[] to access the report. Click on wildfly-demo.war application.
 
 image::mta-report.png[]
 
-The analysis of the sample application shows no mandatory issues to resolve in order for this application to run in a cloud environment. 
+The analysis of the sample application shows one mandatory issues to resolve in order for this application to run in a cloud environment. 
+
+Click on "Issues" to view the "Cloud mandatory" issues to be resolved before we can deploy this application to the cloud.
+
+image::mta-issues.png[]
+
+This page shows us the issue relates to the use of a Java Remote Method Invocation (RMI) call.
+
+Click on "Java Remote Method Invocation (RMI) API" to expand this selection.
+
+image::mta-expand.png[]
+
+We can see the file location of the issue along with some more detail.  Clicking on the file name will bring us to the location in the source code.
+
+image::mta-file.png[]
+
+To resolve this issue our application code will need to be refactored to remove the RMI calls, we've done this already in another branch which we'll use to deploy to OpenShift.
+
 
 == Summary
 
