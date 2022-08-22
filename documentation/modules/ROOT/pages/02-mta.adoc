@@ -147,7 +147,7 @@ We can see the file location of the issue along with some more detail.  Clicking
 
 image::mta-file.png[]
 
-To resolve this issue our application code will need to be refactored to remove the RMI calls, we've done this already in another branch which we'll use to deploy to OpenShift.
+To resolve this issue our application code will need to be refactored to remove the RMI calls, typically this would involve replacing the RMI calls with a RESTful interface.  The code changes required to perform this refactor are beyond the scope of this tutorial.  We've made these changes already to the repository we're going to deploy to OpenShift.
 
 
 == Summary
